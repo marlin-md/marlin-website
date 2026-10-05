@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro'
+import DownloadLinks from '../components/DownloadLinks.vue'
+import { latest } from '../lib/latest'
+import { RELEASES_URL, REPO_URL } from '../lib/release'
+---
+
+<Base title="下载" description={`下载 Marlin ${latest.version}：Windows 10 / 11 x64 安装版与便携版。`}>
+  <div class="wrap page">
+    <h1>下载 Marlin</h1>
+    <p class="lede">v{latest.version}，{latest.date} 发布。{latest.summary} <a href="/changelog">更新日志</a></p>
+
+    <DownloadLinks client:load variant="page" version={latest.version} date={latest.date} />
+
+    <div class="notes">
+      <section>
+        <h2>系统要求</h2>
+        <p>Windows 10 1809 及以上或 Windows 11，x64。Marlin 用系统自带的 WebView2 显示页面，Windows 11 和多数 Windows 10 已经装好；缺少时安装器会引导安装。</p>
+      </section>
+      <section>
+        <h2>第一次运行时的安全提示</h2>
+        <p>Marlin 目前还没有代码签名证书，Windows 可能弹出「Windows 已保护你的电脑」。点「更多信息」，再点「仍要运行」即可。下载前可以在 <a href={RELEASES_URL} rel="noopener">Releases</a> 页面核对文件的 SHA-256 摘要。</p>
+      </section>
+      <section>
+        <h2>设为默认打开方式</h2>
+        <p>装好后第一次打开 <code>.md</code> 会提示「把 Marlin 设为默认打开方式」，点一次即可。之后在资源管理器里双击 <code>.md</code> 就会用 Marlin 打开。</p>
+      </section>
+      <section>
+        <h2>便携版</h2>
+        <p>解压后直接运行 <code>marlin.exe</code>。程序旁的 <code>portable</code> 文件决定设置存在 <code>data\</code> 里；删掉它就回到普通模式，改用用户目录。</p>
+      </section>
+      <section>
+        <h2>历史版本与源码</h2>
+        <p>所有版本都在 <a href={RELEASES_URL} rel="noopener">GitHub Releases</a>。想自己构建，需要 Rust stable、Node 20+、pnpm 和 MSVC 工具链，步骤见 <a href={`${REPO_URL}#从源码构建`} rel="noopener">README</a>。</p>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    max-width: 920px;
+    padding-top: 64px;
+  }
+  h1 {
+    font-size: clamp(34px, 4vw, 46px);
+  }
+  .lede {
+    margin: 14px 0 40px;
+    font-size: 17px;
+    color: var(--fg-muted);
+    max-width: 44em;
+  }
+  .notes {
+    margin-top: 72px;
+    display: grid;
+    gap: 36px;
+    max-width: 680px;
+  }
+  .notes h2 {
+    font-size: 21px;
+    margin-bottom: 8px;
+  }
+  .notes p {
+    color: var(--fg-muted);
+  }
+  code {
+    font: 0.88em var(--font-mono);
+    background: var(--hover);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+</style>

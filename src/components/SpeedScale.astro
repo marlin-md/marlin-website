@@ -1,0 +1,158 @@
+---
+// 速度标尺：同一条线性时间轴上画三项实测耗时，并标出眨一次眼的时长作参照。
+// 数据与主仓库 README「实测数据」一致；完整数据表在下方「完整实测数据」里（图表的表格版）。
+const MAX = 2400 // 时间轴终点（毫秒），让最长的一项右边还放得下数值
+
+const rows = [
+  { label: '已经开着 Marlin，再打开一个文件', note: '1 万字的文档', min: 70, max: 121, value: '70–121 ms' },
+  { label: '冷启动：从双击到看见第一屏', note: 'WebView2 也是冷的', min: 600, max: 600, value: '约 600 ms' },
+  { label: '打开一份 10 MB 的 Markdown', note: '之后滚动 68–140 fps', min: 1800, max: 1800, value: '1.8 s' }
+]
+const blink = { from: 100, to: 400 }
+const ticks = [0, 500, 1000, 1500, 2000]
+
+const frac = (ms: number) => ms / MAX
+const pct = (ms: number) => `${frac(ms) * 100}%`
+const tickLabel = (ms: number) => (ms === 0 ? '0' : `${ms / 1000} s`)
+---
+
+<figure class="scale">
+  <div class="plot" style={`--from:${frac(blink.from)};--span:${frac(blink.to - blink.from)}`}>
+    <div class="band" aria-hidden="true"></div>
+    <span class="band-label">眨一次眼 0.1–0.4 s</span>
+    {
+      rows.map((r) => (
+        <>
+          <p class="lbl">
+            {r.label}
+            <span>{r.note}</span>
+          </p>
+          <div class="track">
+            <i class="bar" style={`width:${pct(r.min)}`} />
+            {r.max > r.min && <i class="range" style={`left:${pct(r.min)};width:${pct(r.max - r.min)}`} />}
+            <b class="val" style={`left:${pct(r.max)}`}>{r.value}</b>
+          </div>
+        </>
+      ))
+    }
+    <span></span>
+    <div class="axis" aria-hidden="true">
+      {ticks.map((t) => <span style={`left:${pct(t)}`}>{tickLabel(t)}</span>)}
+    </div>
+  </div>
+  <figcaption>
+    release 版实测：Ryzen 7 5800H、32 GB 内存、Windows 11。浅色段是多次测量的波动范围；眨眼时长取常见引用值。
+  </figcaption>
+</figure>
+
+<style>
+  .scale {
+    margin: 0;
+  }
+  /* 左列标签、右列时间轴；参照带只画在时间轴那一列 */
+  .plot {
+    --lw: 300px;
+    --gap: 32px;
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--lw) minmax(0, 1fr);
+    column-gap: var(--gap);
+    align-items: center;
+    padding-top: 36px;
+  }
+  .band {
+    position: absolute;
+    top: 0;
+    bottom: 26px;
+    left: calc(var(--lw) + var(--gap) + (100% - var(--lw) - var(--gap)) * var(--from));
+    width: calc((100% - var(--lw) - var(--gap)) * var(--span));
+    background: color-mix(in srgb, var(--fg) 6%, transparent);
+    border-radius: 4px;
+  }
+  .band-label {
+    position: absolute;
+    top: 8px;
+    left: calc(var(--lw) + var(--gap) + (100% - var(--lw) - var(--gap)) * var(--from) + 8px);
+    font-size: 12.5px;
+    color: var(--fg-muted);
+    white-space: nowrap;
+  }
+  .lbl {
+    position: relative;
+    padding: 16px 0;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .lbl span {
+    display: block;
+    font-size: 13px;
+    color: var(--fg-muted);
+  }
+  .track {
+    position: relative;
+    height: 8px;
+  }
+  .bar,
+  .range {
+    position: absolute;
+    top: 0;
+    height: 8px;
+  }
+  .bar {
+    left: 0;
+    background: var(--accent);
+    border-radius: 0 4px 4px 0;
+  }
+  .range {
+    background: color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 0 4px 4px 0;
+    margin-left: 2px;
+  }
+  .val {
+    position: absolute;
+    top: 50%;
+    transform: translate(10px, -50%);
+    font: 600 15px/1 var(--font-sans);
+    white-space: nowrap;
+  }
+  .axis {
+    position: relative;
+    height: 26px;
+    margin-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+  .axis span {
+    position: absolute;
+    top: 6px;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .axis span:first-child {
+    transform: none;
+  }
+  figcaption {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--fg-muted);
+  }
+  @media (max-width: 760px) {
+    .plot {
+      --lw: 112px;
+      --gap: 14px;
+    }
+    .lbl {
+      font-size: 13.5px;
+    }
+    .lbl span {
+      font-size: 12px;
+    }
+    .val {
+      font-size: 13.5px;
+    }
+    .band-label {
+      font-size: 11.5px;
+    }
+  }
+</style>

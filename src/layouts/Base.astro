@@ -1,0 +1,246 @@
+---
+import '../styles/global.css'
+import { REPO_URL } from '../lib/release'
+
+interface Props {
+  /** 页面名，会拼成「名 - Marlin 墨鳞」；首页用 fullTitle 给完整标题 */
+  title?: string
+  fullTitle?: string
+  description?: string
+  /** 结构化数据（JSON-LD），每项输出一个 script */
+  jsonld?: object[]
+}
+
+const {
+  title,
+  fullTitle,
+  description = 'Marlin（墨鳞）是 Windows 上免费开源的 Markdown 阅读器：双击 .md 直接看到排好版的文档，按 E 就地修改。安装包 5.5 MB，再打开一个文件只要 70–120 毫秒。',
+  jsonld = []
+} = Astro.props
+const pageTitle = fullTitle ?? (title ? `${title} - Marlin 墨鳞` : 'Marlin 墨鳞')
+const path = Astro.url.pathname.replace(/\/$/, '') || '/'
+const nav = [
+  { href: '/#features', label: '功能' },
+  { href: '/#themes', label: '主题' },
+  { href: '/#faq', label: '常见问题' },
+  { href: '/changelog', label: '更新日志' }
+]
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Marlin 墨鳞" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#f4f3ef" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#17191d" media="(prefers-color-scheme: dark)" />
+    {jsonld.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+    <script is:inline>
+      // 尽早套用用户手动选过的明暗，避免闪一下
+      try {
+        const t = localStorage.getItem('theme')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到正文</a>
+    <header class="site-head">
+      <div class="wrap bar">
+        <a class="brand" href="/" aria-label="Marlin 首页">
+          <img src="/brand/mark.png" alt="" width="30" height="25" />
+          <span class="name">Marlin</span>
+          <span class="cn">墨鳞</span>
+        </a>
+        <nav aria-label="主导航">
+          <span class="links">
+            {nav.map((n) => (
+              <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>
+            ))}
+          </span>
+          <a class="icon" href={REPO_URL} rel="noopener" aria-label="GitHub 源码" title="GitHub 源码">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path fill="currentColor" d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"></path>
+            </svg>
+          </a>
+          <button class="icon mode" type="button" aria-label="切换明暗" title="切换明暗">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+              <path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"></path>
+            </svg>
+          </button>
+          <a class="cta" href="/download" aria-current={path === '/download' ? 'page' : undefined}>下载</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-foot">
+      <div class="wrap foot">
+        <div class="about">
+          <p class="motto">Markdown, at full speed.</p>
+          <p class="muted">Marlin 以 MIT 许可开源，用 Rust 与 Tauri 2 写成。没有账号，没有统计，不收集任何数据。</p>
+        </div>
+        <nav aria-label="页脚">
+          <a href="/download">下载</a>
+          <a href="/changelog">更新日志</a>
+          <a href="/#faq">常见问题</a>
+          <a href={REPO_URL} rel="noopener">GitHub</a>
+          <a href={`${REPO_URL}/issues`} rel="noopener">反馈问题</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      const root = document.documentElement
+      const dark = matchMedia('(prefers-color-scheme: dark)')
+      document.querySelector('.mode')?.addEventListener('click', () => {
+        const isDark = root.dataset.theme ? root.dataset.theme === 'dark' : dark.matches
+        const next = isDark ? 'light' : 'dark'
+        root.dataset.theme = next
+        try {
+          localStorage.setItem('theme', next)
+        } catch {}
+      })
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: absolute;
+    left: -999px;
+  }
+  .skip:focus {
+    left: 16px;
+    top: 12px;
+    z-index: 10;
+    background: var(--bg-elev);
+    padding: 6px 12px;
+  }
+  .site-head {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .brand img {
+    align-self: center;
+  }
+  .name {
+    font: 700 20px/1 var(--font-serif);
+  }
+  .cn {
+    font-size: 14px;
+    color: var(--fg-muted);
+  }
+  nav,
+  .links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .links {
+    margin-right: 6px;
+  }
+  nav a,
+  .icon {
+    color: var(--fg-muted);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+  nav a:hover,
+  .links a[aria-current='page'],
+  .icon:hover {
+    color: var(--fg);
+    background: var(--hover);
+  }
+  .icon {
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 8px;
+  }
+  nav a.cta {
+    margin-left: 8px;
+    padding: 6px 16px;
+    font-weight: 600;
+    color: var(--on-accent);
+    background: var(--accent);
+  }
+  nav a.cta:hover {
+    color: var(--on-accent);
+    background: var(--accent-hover);
+  }
+  .site-foot {
+    margin-top: 120px;
+    border-top: 1px solid var(--border);
+    padding: 40px 0 56px;
+    font-size: 14px;
+  }
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .about {
+    max-width: 30em;
+  }
+  .motto {
+    font: italic 600 18px/1.4 var(--font-serif);
+    margin-bottom: 4px;
+  }
+  .muted {
+    color: var(--fg-muted);
+  }
+  .foot nav {
+    margin-left: -10px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 860px) {
+    .links {
+      display: none;
+    }
+  }
+  @media (max-width: 420px) {
+    .cn {
+      display: none;
+    }
+  }
+</style>
