@@ -1,5 +1,6 @@
 // 下载相关的常量与链接拼接。安装包命名与主仓库 README 保持一致。
-export const REPO = 'marlin-md/marlin'
+// 源码仓库不公开；安装包和更新清单在公开的发布仓库里。
+export const REPO = 'marlin-md/marlin-releases'
 export const REPO_URL = `https://github.com/${REPO}`
 export const RELEASES_URL = `${REPO_URL}/releases`
 

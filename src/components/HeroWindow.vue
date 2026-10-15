@@ -2,6 +2,7 @@
 // 首页的可操作演示：仿 Marlin 窗口，阅读态 ⇄ 分栏编辑，源码改动实时渲染
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import MarkdownIt from 'markdown-it'
+import { url } from '../lib/url'
 
 const SAMPLE = [
   '# 快速上手',
@@ -107,7 +108,7 @@ onBeforeUnmount(() => {
   <figure ref="root" class="demo" :data-mode="mode">
     <div class="win" role="group" aria-label="Marlin 窗口演示">
       <div class="title">
-        <img src="/brand/mark.png" alt="" width="16" height="14" />
+        <img :src="url('/brand/mark.png')" alt="" width="16" height="14" />
         <span>快速上手.md - 产品手册 - Marlin</span>
         <span class="ctl" aria-hidden="true">
           <i class="min"></i><i class="max"></i><i class="close"></i>

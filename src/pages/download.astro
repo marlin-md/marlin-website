@@ -2,13 +2,14 @@
 import Base from '../layouts/Base.astro'
 import DownloadLinks from '../components/DownloadLinks.vue'
 import { latest } from '../lib/latest'
-import { RELEASES_URL, REPO_URL } from '../lib/release'
+import { RELEASES_URL } from '../lib/release'
+import { url } from '../lib/url'
 ---
 
 <Base title="下载" description={`下载 Marlin ${latest.version}：Windows 10 / 11 x64 安装版与便携版。`}>
   <div class="wrap page">
     <h1>下载 Marlin</h1>
-    <p class="lede">v{latest.version}，{latest.date} 发布。{latest.summary} <a href="/changelog">更新日志</a></p>
+    <p class="lede">v{latest.version}，{latest.date} 发布。{latest.summary} <a href={url('/changelog')}>更新日志</a></p>
 
     <DownloadLinks client:load variant="page" version={latest.version} date={latest.date} />
 
@@ -30,8 +31,8 @@ import { RELEASES_URL, REPO_URL } from '../lib/release'
         <p>解压后直接运行 <code>marlin.exe</code>。程序旁的 <code>portable</code> 文件决定设置存在 <code>data\</code> 里；删掉它就回到普通模式，改用用户目录。</p>
       </section>
       <section>
-        <h2>历史版本与源码</h2>
-        <p>所有版本都在 <a href={RELEASES_URL} rel="noopener">GitHub Releases</a>。想自己构建，需要 Rust stable、Node 20+、pnpm 和 MSVC 工具链，步骤见 <a href={`${REPO_URL}#从源码构建`} rel="noopener">README</a>。</p>
+        <h2>历史版本</h2>
+        <p>所有版本都在 <a href={RELEASES_URL} rel="noopener">GitHub Releases</a>。</p>
       </section>
     </div>
   </div>

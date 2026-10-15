@@ -4,6 +4,7 @@
 // data-event 留给以后接入的统计脚本（Umami / Plausible 都认这种写法）。
 import { onMounted, ref } from 'vue'
 import { downloadsFor, fetchLatest, formatDate, formatSize } from '../lib/release'
+import { url } from '../lib/url'
 
 const props = defineProps<{
   version: string
@@ -40,7 +41,7 @@ onMounted(async () => {
     </div>
     <p v-if="variant !== 'page' && !started" class="meta">
       v{{ dl.version }}<template v-if="dl.date">，{{ formatDate(dl.date) }}更新</template>。安装包 {{ formatSize(dl.setup.size) || '5.5 MB' }}，适用于 Windows 10 / 11（x64）。
-      <a class="more-link" href="/download">其他下载方式</a>
+      <a class="more-link" :href="url('/download')">其他下载方式</a>
     </p>
 
     <div v-if="variant === 'page'" class="options">

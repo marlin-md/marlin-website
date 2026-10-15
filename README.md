@@ -19,7 +19,7 @@ pnpm check                    # 类型检查
 |---|---|---|
 | 更新日志、最新版本号与日期 | 主仓库 `docs/CHANGELOG.md` | `pnpm sync` |
 | 截图（含「打开文件夹」的裁剪图）、Logo、favicon | 主仓库 `docs/images/`、`brand/` | `pnpm sync`；截图由 Astro 转成 WebP |
-| 下载链接 | `Marlin_<版本>_x64-setup.exe` / `-portable.zip`，tag 为 `v<版本>` | 自动：构建时按版本号拼，打开页面时再查 GitHub 最新 Release |
+| 下载链接 | 公开的发布仓库 `marlin-md/marlin-releases`（源码仓库不公开）：`Marlin_<版本>_x64-setup.exe` / `-portable.zip`，tag 为 `v<版本>` | 自动：构建时按版本号拼，打开页面时再查 GitHub 最新 Release |
 | 速度标尺、完整实测数据、功能文案、路线图 | 主仓库 README 与 `docs/08-ROADMAP-2.md`，手工同步 | 改 `src/pages/index.astro`、`src/components/SpeedScale.astro` |
 | 常见问题（同时生成 FAQPage 结构化数据） | 手写，事实以主仓库为准 | 改 `src/lib/faq.ts` |
 | 主题演示色值 | 主仓库 `themes/*/theme.css` | 改 `src/components/ThemeShowcase.vue` |
@@ -42,6 +42,7 @@ scripts/sync.mjs、video.mjs
 
 ## 待办
 
-- 定域名后：`astro.config.mjs` 填 `site`，加 `@astrojs/sitemap` 和 canonical，og:image 换成绝对地址
+- 现在用 GitHub Pages 部署（推到 main 自动发布，见 `.github/workflows/deploy.yml`），地址 https://marlin-md.github.io/marlin-website/ 。站内路径都经 `src/lib/url.ts` 加上 `/marlin-website` 前缀
+- 换成自己的域名后：`astro.config.mjs` 改 `site`、去掉 `base`，Pages 设置里填域名；加 `@astrojs/sitemap` 和 canonical
 - 接入统计（Umami 或 Plausible）：下载按钮已带 `data-event="download-setup"` / `"download-portable"`
 - 拿到代码签名证书后：删掉下载页「第一次运行时的安全提示」、下载引导里的 SmartScreen 说明、常见问题里对应的一条
