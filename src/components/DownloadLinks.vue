@@ -40,7 +40,7 @@ onMounted(async () => {
       <a class="btn btn-quiet" :href="dl.portable.url" data-event="download-portable" @click="started = 'portable'">便携版 zip</a>
     </div>
     <p v-if="variant !== 'page' && !started" class="meta">
-      v{{ dl.version }}<template v-if="dl.date">，{{ formatDate(dl.date) }}更新</template>。安装包 {{ formatSize(dl.setup.size) || '5.5 MB' }}，适用于 Windows 10 / 11（x64）。
+      v{{ dl.version }}<template v-if="dl.date">，{{ formatDate(dl.date) }}更新</template>。安装包 {{ formatSize(dl.setup.size) || '6.4 MB' }}，适用于 Windows 10 / 11（x64）。
       <a class="more-link" :href="url('/download')">其他下载方式</a>
     </p>
 
@@ -63,7 +63,7 @@ onMounted(async () => {
       <p class="next-title">下载开始了，接下来：</p>
       <ol v-if="started === 'setup'">
         <li>
-          运行 <code>{{ dl.setup.name }}</code>。如果弹出「Windows 已保护你的电脑」，点「更多信息」，再点「仍要运行」。Marlin 还没有代码签名证书，所以会有这一步。
+          运行 <code>{{ dl.setup.name }}</code>。如果弹出「Windows 已保护你的电脑」，点「更多信息」，再点「仍要运行」。
         </li>
         <li>第一次打开 <code>.md</code> 时，Marlin 会问要不要设为默认打开方式，点一次即可。</li>
         <li>以后在资源管理器里双击任何 <code>.md</code>，都直接是排好版的页面。</li>

@@ -6,7 +6,7 @@ Marlin（墨鳞）的产品网站，Astro 7 + Vue 组件（交互部分），纯
 
 ```bash
 pnpm install
-pnpm sync <主仓库本地路径>   # 同步更新日志、截图、品牌图；仓库公开后可省略路径，直接从 GitHub 拉
+pnpm sync <主仓库本地路径>   # 同步更新日志、品牌图；仓库公开后可省略路径，直接从 GitHub 拉
 pnpm video [视频路径]         # 转出网站用的 1080p / 720p 与封面，默认取 ../promo-video/marlin-tour.mp4
 pnpm dev                      # http://localhost:4321
 pnpm build                    # 输出到 dist/
@@ -18,13 +18,14 @@ pnpm check                    # 类型检查
 | 网站里的 | 来源 | 更新方式 |
 |---|---|---|
 | 更新日志、最新版本号与日期 | 主仓库 `docs/CHANGELOG.md` | `pnpm sync` |
-| 截图（含「打开文件夹」的裁剪图）、Logo、favicon | 主仓库 `docs/images/`、`brand/` | `pnpm sync`；截图由 Astro 转成 WebP |
+| Logo、favicon | 主仓库 `brand/` | `pnpm sync` |
+| 截图 `src/assets/shots/`（2 倍图，Astro 转成 WebP） | promo-video 的 `scripts/capture`：用主仓库的测试版打开示例工作区截取，和导览视频同一批 | 重新截取后拷过来；`search-crop.png` 是 `search.png` 左上 1520×1080 的裁剪 |
 | 下载链接 | 公开的发布仓库 `marlin-md/marlin-releases`（源码仓库不公开）：`Marlin_<版本>_x64-setup.exe` / `-portable.zip`，tag 为 `v<版本>` | 自动：构建时按版本号拼，打开页面时再查 GitHub 最新 Release |
-| 速度标尺、完整实测数据、功能文案、路线图 | 主仓库 README 与 `docs/08-ROADMAP-2.md`，手工同步 | 改 `src/pages/index.astro`、`src/components/SpeedScale.astro` |
+| 速度标尺、完整实测数据、功能文案 | 主仓库 README 与 `docs/CHANGELOG.md`，手工同步 | 改 `src/pages/index.astro`、`src/components/SpeedScale.astro` |
 | 常见问题（同时生成 FAQPage 结构化数据） | 手写，事实以主仓库为准 | 改 `src/lib/faq.ts` |
 | 主题演示色值 | 主仓库 `themes/*/theme.css` | 改 `src/components/ThemeShowcase.vue` |
 | 分享卡片 `public/og.png` | 用网站样式排版后截图（1200×630） | 文案或截图大改时重新截 |
-| 功能导览视频 `public/video/marlin-tour-*` | `promo-video/marlin-tour.mp4`（3 分 07 秒，9 章，无声；在 promo-video 里 `pnpm render:tour` 导出） | `pnpm video`：转出 1080p / 720p 与封面（第 15.5 秒的目录页）。导览时间轴变了要同步改 `src/lib/tour.ts` |
+| 功能导览视频 `public/video/marlin-tour-*` | `promo-video/marlin-tour.mp4`（4 分 12 秒，12 章，无声；在 promo-video 里 `pnpm render:tour` 导出） | `pnpm video`：转出 1080p / 720p 与封面（第 15.5 秒的目录页）。导览时间轴变了要同步改 `src/lib/tour.ts` |
 
 ## 目录
 
