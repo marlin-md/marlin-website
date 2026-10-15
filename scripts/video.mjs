@@ -3,9 +3,10 @@
 // 默认取 ../promo-video/marlin-tour.mp4（在 promo-video 里用 pnpm render:tour 导出），
 // 输出 public/video/marlin-tour-{1080,720}.mp4 与 -poster.webp
 import { execFileSync } from 'node:child_process'
-import { mkdir, rm } from 'node:fs/promises'
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import { statSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import ffmpeg from 'ffmpeg-static'
 import sharp from 'sharp'
@@ -54,5 +55,14 @@ run(['-ss', POSTER_AT, '-i', src, '-frames:v', '1', frame])
 const poster = join(out, `${NAME}-poster.webp`)
 await sharp(frame).resize({ width: 1280 }).webp({ quality: 82 }).toFile(poster)
 await rm(frame)
+
+// 文件名不变时浏览器会一直放缓存里的旧视频：首页的地址带上内容摘要（src/lib/video.ts）
+const files = [full, small, poster]
+const hashes = await Promise.all(files.map(async (f) => createHash('sha1').update(await readFile(f)).digest('hex').slice(0, 8)))
+const entries = files.map((f, i) => `  '${basename(f)}': '${hashes[i]}'`)
+await writeFile(
+  join(site, 'src/lib/video.ts'),
+  `// 由 scripts/video.mjs 生成：视频文件的内容摘要，首页加在地址后面让浏览器换掉缓存，不要手改\nexport const VIDEO_VERSION = {\n${entries.join(',\n')}\n}\n`
+)
 
 console.log(`桌面版 ${mb(full)}，手机版 ${mb(small)}，封面 ${mb(poster)}`)
