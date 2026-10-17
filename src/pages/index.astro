@@ -1,11 +1,6 @@
 ---
 import { Image } from 'astro:assets'
 import Base from '../layouts/Base.astro'
-import HeroWindow from '../components/HeroWindow.vue'
-import SpeedScale from '../components/SpeedScale.astro'
-import TableDemo from '../components/TableDemo.vue'
-import MermaidDemo from '../components/MermaidDemo.vue'
-import ThemeShowcase from '../components/ThemeShowcase.vue'
 import DownloadLinks from '../components/DownloadLinks.vue'
 import PromoVideo from '../components/PromoVideo.vue'
 import { latest } from '../lib/latest'
@@ -13,69 +8,37 @@ import { faqs } from '../lib/faq'
 import { TOUR_CHAPTERS, TOUR_DURATION } from '../lib/tour'
 import { downloadsFor } from '../lib/release'
 import { url } from '../lib/url'
+import { SLOGAN, SLOGAN_EN } from '../lib/brand'
 import { VIDEO_VERSION } from '../lib/video'
 // 截图来自 promo-video/scripts/capture（测试版 + 示例工作区，2 倍图）
+import readingShot from '../assets/shots/reading.png'
 import liveShot from '../assets/shots/live-table.png'
 import flowShot from '../assets/shots/flow-5.png'
 import seqShot from '../assets/shots/seq-4.png'
 import mindShot from '../assets/shots/mind-4.png'
-import searchShot from '../assets/shots/search-crop.png'
 import gitShot from '../assets/shots/git-diff.png'
 import presentShot from '../assets/shots/present-pen.png'
 
-// 完整实测数据：与主仓库 README「实测数据」一节一致，也是上方速度标尺的表格版
-const perf = [
-  ['已开着 Marlin 再开一个文件（1 万字）', '70–121 ms'],
-  ['冷启动到首屏（1 万字，WebView2 冷）', '约 600 ms'],
-  ['编辑响应：改动到预览更新（10 万字）', '28–35 ms'],
-  ['10 MB 文档打开 / 滚动', '1.8 s / 68–140 fps'],
-  ['打开 1 万个文件的仓库到文件树可见¹', '23–34 ms'],
-  ['全目录搜索（1.2 万个文件的仓库）¹', '27–57 ms'],
-  ['Mermaid：20 张图的文档改其中一张', '只重画这一张，41 ms'],
-  ['安装包', '6.4 MB（便携版 zip 7.4 MB）']
-]
-
-const audiences = [
-  {
-    title: '收到一个 .md 文件',
-    text: '同事发来的文档、AI 生成的说明、下载包里的 README。双击就是排好版的页面，不用懂 Markdown。'
-  },
-  {
-    title: '在仓库里写文档的开发者',
-    text: '打开整个文件夹，秒找文件、全目录搜索；看得到 Git 改动，一键提交、拉取、推送。'
-  },
-  {
-    title: '要画图、要讲的人',
-    text: '流程图、时序图、思维导图在画板里画；写完按 F5 直接放映，不用另做幻灯片。'
-  }
-]
-
-const layouts = [
-  { key: 'Alt+1', name: '分栏', text: '左边源码，右边预览，滚动两侧同步。' },
-  { key: 'Alt+2', name: '实时预览', text: '在排好版的正文里直接改，光标所在处才露出 ** 和 #；代码、公式、图表、图片都是原地可改的卡片。' },
-  { key: 'Alt+3', name: '仅源码', text: '只看源码，带语法高亮、行号和多光标。' }
-]
-
-const boards = [
-  { img: seqShot, name: '时序图', text: '左边时间线一行一条消息，行里直接改；Enter 加一条回复，拖动调顺序、包进循环和分支。', alt: 'Marlin 时序图画板：左边时间线，中间是图，右边是消息的属性' },
-  { img: mindShot, name: '思维导图', text: '像 XMind 一样：Tab 加子主题、Enter 加同级；树状布局下加主题，别的分支不动。', alt: 'Marlin 思维导图画板：订单服务的树状导图，刚加了「售后」和两个子主题' }
+// 实测数据（主仓库 README「实测数据」）
+const stats = [
+  ['70', 'ms', '再开一个文件'],
+  ['1.8', 's', '打开 10 MB 文档'],
+  ['6.4', 'MB', '安装包']
 ]
 
 const more = [
-  ['数学公式', '$…$、$$…$$ 用 KaTeX 排版；文档里没有公式就不加载。'],
-  ['文档属性', '开头 --- 之间的 YAML 显示成一张属性表，tags 是小标签。'],
-  ['导出与打印', '一键存成 A4 PDF 或单个 HTML 文件，图表、公式、本地图片都带上。'],
-  ['自动更新', '有新版本时状态栏提示，点一下下载安装，签名校验通过才装。'],
-  ['便携版', '解压即用，设置和缓存都放在程序旁边，能放在 U 盘里带走。'],
-  ['多标签、多窗口', '双击别的 .md 在已开着的窗口里开新标签，每个标签记住读到哪。']
+  ['打开文件夹', '整个仓库，即开即搜。'],
+  ['数学公式', 'KaTeX 排版。'],
+  ['导出', 'PDF、HTML，一键。'],
+  ['主题', '一份 CSS，一套主题。'],
+  ['自动更新', '新版本，点一下。'],
+  ['便携版', '解压即用。']
 ]
 
-// 视频换了内容但文件名不变，浏览器会一直放缓存里的旧版：地址带上内容摘要
-const video = (name: keyof typeof VIDEO_VERSION) => url(`/video/${name}`) + '?v=' + VIDEO_VERSION[name]
-
 const dl = downloadsFor(latest.version, latest.date)
+const video = (name: keyof typeof VIDEO_VERSION) => url(`/video/${name}`) + '?v=' + VIDEO_VERSION[name]
 const description =
-  'Marlin（墨鳞）是 Windows 上免费的 Markdown 阅读器与编辑器：双击 .md 秒开，在排好版的正文里直接改；流程图、时序图、思维导图在画板里画，Git 同步，F5 放映。安装包 6.4 MB。'
+  'Marlin（墨鳞）是 Windows 上免费的 Markdown 阅读器与编辑器：双击秒开，所见即所改；流程图、时序图、思维导图在画板里画，Git 同步，F5 放映。'
 const jsonld = [
   {
     '@context': 'https://schema.org',
@@ -103,29 +66,103 @@ const jsonld = [
 ]
 ---
 
-<Base fullTitle="Marlin 墨鳞 - 免费的 Windows Markdown 阅读器与编辑器，双击 .md 秒开" description={description} jsonld={jsonld}>
-  <section class="hero wrap">
-    <div class="pitch">
-      <h1>双击 .md，<br />看到的就是<br />排好版的文档。</h1>
-      <p class="lede">Windows 上免费的 Markdown 阅读器与编辑器。双击秒开，在排好版的正文里直接改，流程图、思维导图在画板里画。</p>
+<Base fullTitle={`Marlin 墨鳞 - ${SLOGAN}`} description={description} jsonld={jsonld}>
+  <section class="band hero">
+    <div class="wrap">
+      <!-- 名字先以 Markdown 源码出现，再「渲染」成标题：Marlin 实时预览做的就是这件事 -->
+      <h1 class="name" id="headline"><span class="mk" aria-hidden="true">#&nbsp;</span>Marlin<i class="caret" aria-hidden="true"></i></h1>
+      <script is:inline>
+        ;(() => {
+          const h = document.getElementById('headline')
+          if (!h || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+          h.classList.add('is-source')
+          setTimeout(() => h.classList.remove('is-source'), 1100)
+        })()
+      </script>
+      <p class="slogan">{SLOGAN}</p>
+      <p class="slogan-en" lang="en">{SLOGAN_EN}</p>
       <DownloadLinks client:idle version={latest.version} date={latest.date} />
-      <ul class="trust">
-        <li>免费用</li>
-        <li>不用注册账号</li>
-        <li>文档只在你的电脑上</li>
-      </ul>
-    </div>
-    <div class="stage">
-      <HeroWindow client:load />
+      <figure class="shot">
+        <Image
+          src={readingShot}
+          widths={[800, 1200, 1600, 2400]}
+          sizes="(max-width: 1264px) calc(100vw - 64px), 1200px"
+          alt="Marlin 打开一个文件夹：左边文件树，右边排好版的「快速上手」"
+          loading="eager"
+        />
+      </figure>
     </div>
   </section>
 
-  <section class="promo" id="video" aria-labelledby="video-title">
+  <section class="band alt" id="speed">
     <div class="wrap">
-      <div class="promo-head">
-        <h2 id="video-title">4 分钟看完 Marlin 的全部功能</h2>
-        <p>{TOUR_CHAPTERS.length - 1} 个章节，没有声音。点下面的章节，直接跳到想看的部分。</p>
+      <h2>双击秒开</h2>
+      <p class="sub">不打包浏览器，渲染核心用 Rust 写成。</p>
+      <dl class="stats">
+        {stats.map(([n, u, l]) => (
+          <div>
+            <dt>{n}<small>{u}</small></dt>
+            <dd>{l}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <div id="features">
+    <section class="band" id="edit">
+      <div class="wrap">
+        <h2>所见即所改</h2>
+        <p class="sub">在排好版的正文里直接写。</p>
+        <figure class="shot">
+          <Image src={liveShot} widths={[800, 1200, 1600, 2400]} sizes="(max-width: 1264px) calc(100vw - 64px), 1200px" alt="Marlin 实时预览：公式已排好版，表格点进一格变成可编辑的网格" loading="lazy" />
+        </figure>
       </div>
+    </section>
+
+    <section class="band alt" id="board">
+      <div class="wrap">
+        <h2>画板</h2>
+        <p class="sub">流程图、时序图、思维导图，不写代码也能画。</p>
+        <figure class="shot">
+          <Image src={flowShot} widths={[800, 1200, 1600, 2400]} sizes="(max-width: 1264px) calc(100vw - 64px), 1200px" alt="Marlin 流程图画板：刚加了「通知仓库」节点并换成黄色" loading="lazy" />
+        </figure>
+        <div class="pair">
+          <figure class="shot">
+            <Image src={seqShot} widths={[600, 900, 1200]} sizes="(max-width: 760px) calc(100vw - 32px), 584px" alt="Marlin 时序图画板" loading="lazy" />
+            <figcaption>时序图</figcaption>
+          </figure>
+          <figure class="shot">
+            <Image src={mindShot} widths={[600, 900, 1200]} sizes="(max-width: 760px) calc(100vw - 32px), 584px" alt="Marlin 思维导图画板" loading="lazy" />
+            <figcaption>思维导图</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="git">
+      <div class="wrap">
+        <h2>Git 同步</h2>
+        <p class="sub">改动一目了然，提交、拉取、推送一键完成。</p>
+        <figure class="shot">
+          <Image src={gitShot} widths={[800, 1200, 1600, 2400]} sizes="(max-width: 1264px) calc(100vw - 64px), 1200px" alt="Marlin 同步面板：改动的文件和上次提交并排对比" loading="lazy" />
+        </figure>
+      </div>
+    </section>
+
+    <section class="band dark" id="present">
+      <div class="wrap">
+        <h2>一键放映</h2>
+        <p class="sub">按 F5，文档就是幻灯片。</p>
+        <figure class="shot">
+          <Image src={presentShot} widths={[800, 1200, 1600, 2400]} sizes="(max-width: 1264px) calc(100vw - 64px), 1200px" alt="Marlin 放映中：画笔、荧光笔和激光笔标在流程图上" loading="lazy" />
+        </figure>
+      </div>
+    </section>
+  </div>
+
+  <section class="band dark video" id="video" aria-label="功能导览视频">
+    <div class="wrap">
       <PromoVideo
         client:visible
         src={video('marlin-tour-1080.mp4')}
@@ -133,617 +170,272 @@ const jsonld = [
         poster={video('marlin-tour-poster.webp')}
         chapters={TOUR_CHAPTERS}
         duration={TOUR_DURATION}
-        label={`Marlin 功能导览视频，4 分钟，${TOUR_CHAPTERS.length - 1} 个章节，无声音`}
+        label="Marlin 功能导览视频"
       />
     </div>
   </section>
 
-  <section class="speed wrap" id="speed">
-    <div class="intro">
-      <h2>眨眼之间，文件已经打开</h2>
-      <p>不打包 Chromium，界面用系统自带的 WebView2，渲染核心用 Rust 写成：安装包 6.4 MB，双击不用等。大文档只渲染屏幕附近的部分，10 MB 的 Markdown 照样顺滑。</p>
-    </div>
-    <SpeedScale />
-    <details class="all">
-      <summary>完整实测数据（{perf.length} 项）</summary>
-      <table>
-        <tbody>
-          {perf.map(([k, v]) => (
-            <tr>
-              <th scope="row">{k}</th>
-              <td>{v}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <p class="note">¹ 这两项在另一台机器上测：i5-9400、16 GB 内存、Windows 11。</p>
-    </details>
-  </section>
-
-  <section class="who wrap" id="who">
-    <h2>谁会用到 Marlin</h2>
-    <div class="cols">
-      {audiences.map((a) => (
-        <div>
-          <h3>{a.title}</h3>
-          <p>{a.text}</p>
-        </div>
-      ))}
+  <section class="band" id="more">
+    <div class="wrap">
+      <h2>更多功能</h2>
+      <dl class="more">
+        {more.map(([k, v]) => (
+          <div>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
   </section>
 
-  <div id="features">
-    <section class="feature wrap" id="edit">
-      <div class="split">
-        <div class="text">
-          <p class="how"><kbd>E</kbd></p>
-          <h2>读到错字，按 E 就地改</h2>
-          <p>平时是纯阅读，按 <kbd>E</kbd> 进入编辑，<kbd>Ctrl+S</kbd> 存盘，<kbd>Esc</kbd> 回到阅读。三种布局随时切换，切换后停在同一行。</p>
-        </div>
-        <dl class="layouts">
-          {layouts.map((l) => (
-            <div>
-              <dt><kbd>{l.key}</kbd>{l.name}</dt>
-              <dd>{l.text}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-      <figure class="wide">
-        <Image
-          src={liveShot}
-          widths={[720, 1160, 1600]}
-          sizes="(max-width: 1208px) calc(100vw - 48px), 1112px"
-          alt="Marlin 实时预览：公式已经排好版，下面的表格点进一格，原地变成可编辑的网格"
-          loading="lazy"
-        />
-        <figcaption>实时预览：公式、图表都是排好版的样子，表格点进去就是网格。</figcaption>
-      </figure>
-      <ul class="facts">
-        <li>输入 <code>/</code> 呼出插入菜单：标题、表格、公式、Mermaid 图都有模板，<code>/表格</code>、<code>/bg</code>、<code>/table</code> 都能找到</li>
-        <li>截图直接粘贴，自动存进文档旁的 <code>assets/</code> 并插入相对路径</li>
-        <li>存下来的永远是标准 Markdown；什么都没改时文件一个字节都不变</li>
-      </ul>
-    </section>
-
-    <section class="feature wrap" id="table">
-      <div class="split align-start">
-        <div class="text">
-          <p class="how"><code class="token">/表格</code></p>
-          <h2>表格像表格软件一样改</h2>
-          <p>在实时预览里点任意一格，表格原地变成可编辑的网格，改一格就写进文档。写回的仍是普通的 Markdown，没改的行一个字符不动。</p>
-          <ul class="list">
-            <li><kbd>Tab</kbd> / <kbd>Enter</kbd> 在格子间移动，增删行列、设对齐</li>
-            <li>拖动行号、列头调整顺序，按任意一列排序</li>
-            <li>选中一块 <kbd>Ctrl+C</kbd>，直接贴进 Excel</li>
-          </ul>
-        </div>
-        <TableDemo client:visible />
-      </div>
-    </section>
-
-    <section class="feature wrap" id="board">
-      <div class="split">
-        <div class="text">
-          <p class="how"><code class="token">画板</code><span class="new">2.0</span></p>
-          <h2>不写语法，<br />直接画图</h2>
-        </div>
-        <p class="side">流程图、时序图、思维导图都能在画板里画、在画板里改。文件里始终是纯 Mermaid 文本，<code>git diff</code> 只有改到的那几行，GitHub、GitLab 上照样显示。</p>
-      </div>
-      <figure class="wide">
-        <Image
-          src={flowShot}
-          widths={[720, 1160, 1600]}
-          sizes="(max-width: 1208px) calc(100vw - 48px), 1112px"
-          alt="Marlin 流程图画板：刚用 Tab 加了「通知仓库」节点并换成黄色，右边是节点的文字、形状、颜色和分组"
-          loading="lazy"
-        />
-        <figcaption>流程图：选中节点按 <kbd>Tab</kbd> 接一个新节点，直接打字；右边改形状、颜色、分组和连线样式。</figcaption>
-      </figure>
-      <div class="boards">
-        {boards.map((b) => (
-          <figure>
-            <Image src={b.img} widths={[560, 800, 1100]} sizes="(max-width: 760px) calc(100vw - 48px), 540px" alt={b.alt} loading="lazy" />
-            <figcaption><strong>{b.name}</strong>{b.text}</figcaption>
-          </figure>
+  <section class="band alt" id="faq">
+    <div class="wrap">
+      <h2>常见问题</h2>
+      <div class="qa">
+        {faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
         ))}
       </div>
-      <ul class="facts">
-        <li>键盘就能画：<kbd>Tab</kbd> 接下一步、<kbd>Enter</kbd> 加同级，方向键换选中</li>
-        <li>「改动 N」标出这次改了哪里；点「完成」写回，编辑器里一次 <kbd>Ctrl+Z</kbd> 撤销</li>
-        <li>粘贴一份提纲，旁边出现「转成思维导图」，一点就成图</li>
-      </ul>
-    </section>
-
-    <section class="feature wrap" id="mermaid">
-      <div class="split">
-        <div class="text">
-          <p class="how"><code class="token">```mermaid</code></p>
-          <h2>写源码也顺手，<br />写错了也不丢图</h2>
-        </div>
-        <p class="side">流程图、时序图、类图、状态图、甘特图等都直接渲染，配色跟着主题走。写错时保留上一次画好的图，用中文说清楚第几行、什么问题。</p>
-      </div>
-      <MermaidDemo client:visible />
-      <ul class="facts">
-        <li>补全：图的类型、本图已有的节点、箭头写法，都带中文说明</li>
-        <li>常见错误旁边有「修复」按钮，一步改好</li>
-        <li>右键复制图片或导出 2× PNG，贴进飞书、微信里是清楚的</li>
-      </ul>
-    </section>
-
-    <section class="feature wrap" id="workspace">
-      <div class="split media">
-        <div class="text">
-          <p class="how"><kbd>Ctrl+Shift+O</kbd></p>
-          <h2>打开整个文件夹</h2>
-          <p>左侧是文件树，按 <code>.gitignore</code> 过滤，1 万个文件的仓库也是瞬间可见。在树里新建、改名、拖动移动，删除进回收站。</p>
-          <ul class="list">
-            <li><kbd>Ctrl+Shift+P</kbd> 按文件名快速打开，输入 <code>rdme</code> 就能找到 README.md</li>
-            <li><kbd>Ctrl+Shift+F</kbd> 在整个文件夹里搜索，支持正则，点结果跳到那一行</li>
-            <li>改名或移动文件后，指向它的链接一起改</li>
-            <li>图片、PDF 在标签里看；json、yaml 和代码在带高亮的编辑器里改</li>
-          </ul>
-        </div>
-        <figure class="shot-crop">
-          <Image
-            src={searchShot}
-            widths={[600, 760, 1520]}
-            sizes="(max-width: 1000px) calc(100vw - 48px), 640px"
-            alt="Marlin 打开文件夹后，侧栏里搜索「库存」，列出 5 个文件中的 22 处结果"
-            loading="lazy"
-          />
-        </figure>
-      </div>
-    </section>
-
-    <section class="feature wrap" id="git">
-      <div class="split">
-        <div class="text">
-          <p class="how"><code class="token">同步</code></p>
-          <h2>Git 仓库里的文档，<br />改了什么一眼看到</h2>
-        </div>
-        <p class="side">文件树标出改动，状态栏显示分支和领先、落后的提交数。侧栏「同步」一键完成保存、提交、拉取、推送；也能直接克隆仓库。用电脑上装的 git，Marlin 不保存任何密码。</p>
-      </div>
-      <figure class="wide">
-        <Image
-          src={gitShot}
-          widths={[720, 1160, 1600]}
-          sizes="(max-width: 1208px) calc(100vw - 48px), 1112px"
-          alt="Marlin 同步面板：点改动的文件，和上次提交并排对比，改过的行标红绿"
-          loading="lazy"
-        />
-        <figcaption>点改动的文件，和上次提交并排对比。</figcaption>
-      </figure>
-      <ul class="facts">
-        <li>编辑器左边标出改过的行，点一下看原来的内容，可以还原</li>
-        <li>冲突逐个选「保留我的」「使用远端」或手动改，被替换的一方先备份</li>
-        <li>出错时用中文说明原因：连不上远端、要先拉取、没设置名字和邮箱</li>
-      </ul>
-    </section>
-
-    <section class="feature wrap" id="present">
-      <div class="split media">
-        <div class="text">
-          <p class="how"><kbd>F5</kbd></p>
-          <h2>按 F5，文档直接上台</h2>
-          <p>全屏放映：先是封面，之后正文连续滚动、不分页，不用另做幻灯片。</p>
-          <ul class="list">
-            <li><kbd>↓</kbd> <kbd>↑</kbd> 翻一屏，<kbd>→</kbd> <kbd>←</kbd> 在标题之间跳</li>
-            <li><kbd>L</kbd> 激光笔、<kbd>P</kbd> 画笔、<kbd>H</kbd> 荧光笔，笔迹跟着内容滚动</li>
-            <li>比一屏高的图缩到一屏，点图全屏看全貌</li>
-            <li>退出就清空笔迹，不改文档</li>
-          </ul>
-        </div>
-        <figure class="shot-crop">
-          <Image
-            src={presentShot}
-            widths={[600, 760, 1520]}
-            sizes="(max-width: 1000px) calc(100vw - 48px), 640px"
-            alt="Marlin 放映中：用画笔圈出「锁定库存」，荧光笔划过「提示缺货」，激光笔指着「发起支付」"
-            loading="lazy"
-          />
-        </figure>
-      </div>
-    </section>
-  </div>
-
-  <section class="themes wrap" id="themes">
-    <div class="split">
-      <div class="text">
-        <p class="how"><kbd>Ctrl+Shift+T</kbd></p>
-        <h2>主题就是一份 CSS</h2>
-      </div>
-      <p class="side">
-        内置六套，代码高亮可以单独选。想要自己的样子，就在 <code>%APPDATA%\dev.marlin-md.marlin\themes\</code> 下放一个 <code>theme.css</code>，存盘立即生效，不用重启。点下面的主题名看看效果。
-      </p>
-    </div>
-    <ThemeShowcase client:visible />
-  </section>
-
-  <section class="more wrap">
-    <h2>还有这些</h2>
-    <dl>
-      {more.map(([k, v]) => (
-        <div>
-          <dt>{k}</dt>
-          <dd>{v}</dd>
-        </div>
-      ))}
-    </dl>
-  </section>
-
-  <section class="faq wrap" id="faq">
-    <h2>常见问题</h2>
-    <div class="qa">
-      {faqs.map((f, i) => (
-        <details open={i < 2}>
-          <summary>{f.q}</summary>
-          <p>{f.a}</p>
-        </details>
-      ))}
     </div>
   </section>
 
-  <section class="end wrap">
-    <div class="panel">
-      <div>
-        <img src={url('/brand/mark.png')} alt="" width="48" height="41" />
-        <h2>下次双击 .md，<br />用 Marlin 打开。</h2>
-        <p class="sub">免费，安装包 6.4 MB，不需要管理员权限。</p>
-      </div>
+  <section class="band dark end">
+    <div class="wrap">
+      <img src={url('/brand/mark.png')} alt="" width="64" height="54" />
+      <h2>免费下载</h2>
       <DownloadLinks client:idle version={latest.version} date={latest.date} />
     </div>
   </section>
 </Base>
 
 <style>
-  section {
-    scroll-margin-top: 72px;
+  /* 每一段一条通栏色带：白、浅灰、深海交替；内容一律居中 */
+  .band {
+    padding: 160px 0;
+    text-align: center;
+    scroll-margin-top: 60px;
   }
-  code {
-    font: 0.88em var(--font-mono);
-    background: var(--hover);
-    padding: 0.1em 0.35em;
-    border-radius: 4px;
+  .band.alt {
+    background: var(--bg-alt);
+  }
+  .band.dark {
+    background: var(--sea);
+    color: var(--on-sea);
+    --fg: var(--on-sea);
+    --fg-muted: var(--on-sea-muted);
+    --border: rgb(255 255 255 / 16%);
+    --hover: rgb(255 255 255 / 8%);
+    --accent-soft: rgb(255 255 255 / 8%);
+  }
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h2 {
+    font-size: clamp(28px, 3.6vw, 48px);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .sub {
+    margin-top: 14px;
+    font-size: clamp(17px, 1.4vw, 19px);
+    font-weight: 500;
+    color: var(--fg-muted);
+    text-wrap: balance;
+  }
+
+  /* 截图：细边框、大圆角、一层很淡的投影 */
+  .shot {
+    width: 100%;
+    margin: 72px 0 0;
+  }
+  .shot :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
   }
 
   /* 首屏 */
   .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
-    gap: 56px;
-    align-items: center;
-    padding-top: 72px;
-    padding-bottom: 24px;
+    padding-top: 128px;
+    padding-bottom: 0;
+    background: linear-gradient(var(--bg) 66%, var(--bg-alt) 66%);
   }
-  h1 {
-    font-size: clamp(36px, 4.4vw, 54px);
-    line-height: 1.18;
+  .name {
+    font-size: clamp(56px, 8.5vw, 112px);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    font-weight: 700;
+    transition: font-weight 0.35s ease, letter-spacing 0.35s ease;
+  }
+  .name .mk {
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    vertical-align: bottom;
+    opacity: 0;
+    font: 400 0.7em var(--font-mono);
+    color: var(--fg-muted);
+    transition: max-width 0.35s ease, opacity 0.25s ease;
+  }
+  .name .caret {
+    display: inline-block;
+    width: 0.04em;
+    height: 0.8em;
+    margin-left: 0.04em;
+    vertical-align: -0.04em;
+    background: var(--accent);
+    opacity: 0;
+  }
+  .name.is-source {
+    font-weight: 400;
     letter-spacing: -0.02em;
   }
-  .lede {
-    margin: 22px 0 28px;
-    font-size: 18px;
+  .name.is-source .mk {
+    max-width: 1.6em;
+    opacity: 1;
+  }
+  .name.is-source .caret {
+    animation: blink 0.9s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 1;
+    }
+  }
+  .slogan {
+    margin: 16px 0 0;
+    font-size: clamp(20px, 2.2vw, 28px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .slogan-en {
+    margin: 8px 0 36px;
+    font-size: clamp(15px, 1.3vw, 17px);
+    font-weight: 500;
     color: var(--fg-muted);
-    max-width: 26em;
   }
-  .trust {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 18px;
-    margin: 22px 0 0;
-    padding: 0;
-    list-style: none;
-    font-size: 14px;
-  }
-  .trust li {
-    display: flex;
+  .band :global(.dl) {
     align-items: center;
-    gap: 6px;
+    text-align: center;
   }
-  .trust li::before {
-    content: '';
-    width: 14px;
-    height: 14px;
-    flex: none;
-    background: var(--accent);
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 6.5 12 13 4.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  .band :global(.dl .actions) {
+    justify-content: center;
+  }
+  .band :global(.dl .meta) {
+    max-width: none;
+    margin-top: 18px;
+  }
+  .band :global(.dl .more-link) {
+    margin-left: 1em;
+  }
+  /* 下载按钮：胶囊形，比正文按钮大一号 */
+  .band :global(.dl .btn-primary) {
+    padding: 14px 34px;
+    font-size: 17px;
+    border-radius: 999px;
   }
 
-  /* 宣传视频：通栏深色带，底色与视频一致，明暗模式下都一样 */
-  .promo {
-    margin-top: 96px;
-    padding: 80px 0 64px;
-    color: #eceae4;
-    background:
-      radial-gradient(ellipse 60% 55% at 50% 45%, rgb(31 111 148 / 28%), transparent 70%),
-      #0d1014;
-  }
-  .promo-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 8px 32px;
-    margin-bottom: 28px;
-  }
-  .promo-head p {
-    color: #8e949d;
-    font-size: 15px;
-  }
-
-  /* 通用：段落标题区 */
-  .speed,
-  .who,
-  .feature,
-  .themes,
-  .more,
-  .faq,
-  .end {
-    margin-top: 120px;
-  }
-  h2 {
-    font-size: clamp(26px, 3vw, 36px);
-    text-wrap: balance;
-  }
-  .split {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: 24px 56px;
-    align-items: end;
-    margin-bottom: 36px;
-  }
-  .split.align-start {
-    align-items: start;
-    margin-bottom: 0;
-  }
-  .split.media {
-    align-items: center;
-    margin-bottom: 0;
-  }
-  .text h2 {
-    margin-bottom: 14px;
-  }
-  .text > p:not(.how),
-  .side {
-    color: var(--fg-muted);
-  }
-  .side {
-    max-width: 36em;
-  }
-  .how {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-  .how kbd {
-    font-size: 15px;
-  }
-  .how .token {
-    font-size: 15px;
-    color: var(--accent);
-    background: var(--accent-soft);
-    padding: 3px 8px;
-  }
-  .new {
-    margin-left: 6px;
-    font-size: 13px;
-    color: var(--fg-muted);
-  }
-  .list {
-    margin: 20px 0 0;
-    padding: 0;
-    list-style: none;
-  }
-  .list li {
-    position: relative;
-    padding: 9px 0 9px 20px;
-    border-top: 1px solid var(--border);
-    font-size: 15px;
-  }
-  .list li::before {
-    content: '';
-    position: absolute;
-    left: 2px;
-    top: 1.15em;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-  .facts {
+  /* 速度：三个数字 */
+  .stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px 40px;
-    margin: 32px 0 0;
-    padding: 0;
-    list-style: none;
-    font-size: 15px;
-  }
-  .facts li {
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    color: var(--fg-muted);
-  }
-
-  /* 速度 */
-  .speed .intro {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: 24px 56px;
-    align-items: end;
-    margin-bottom: 28px;
-  }
-  .speed .intro p {
-    color: var(--fg-muted);
-    max-width: 36em;
-  }
-  .all {
-    margin-top: 28px;
-  }
-  .all summary {
-    cursor: pointer;
-    color: var(--accent);
-    font-size: 15px;
-    width: fit-content;
-  }
-  .all table {
+    gap: 48px;
     width: 100%;
-    max-width: 820px;
-    margin-top: 16px;
-    border-collapse: collapse;
-    font-size: 15px;
+    max-width: 960px;
+    margin: 80px 0 0;
   }
-  .all th,
-  .all td {
-    text-align: left;
-    padding: 11px 0;
-    border-bottom: 1px solid var(--border);
-    vertical-align: baseline;
-  }
-  .all th {
-    font-weight: 400;
-    padding-right: 24px;
-  }
-  .all td {
-    font-weight: 600;
+  .stats dt {
+    font-size: clamp(44px, 4.8vw, 64px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
     font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-    text-align: right;
   }
-  .note {
-    margin-top: 12px;
-    font-size: 13px;
+  .stats small {
+    margin-left: 0.12em;
+    font-size: 0.36em;
+    letter-spacing: 0;
+    color: var(--accent);
+  }
+  .stats dd {
+    margin: 14px 0 0;
+    font-size: 17px;
     color: var(--fg-muted);
   }
 
-  /* 适合谁 */
-  .who h2 {
-    margin-bottom: 32px;
-  }
-  .cols {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-top: 1px solid var(--fg);
-  }
-  .cols > div {
-    padding: 22px 32px 0 0;
-  }
-  .cols > div + div {
-    padding-left: 32px;
-    border-left: 1px solid var(--border);
-  }
-  .cols h3 {
-    font: 600 19px/1.4 var(--font-sans);
-    margin-bottom: 10px;
-  }
-  .cols p {
-    color: var(--fg-muted);
-  }
-
-  /* 编辑 */
-  .layouts {
-    margin: 0;
-    display: grid;
-    gap: 14px;
-  }
-  .layouts dt {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
-  }
-  .layouts dd {
-    margin: 4px 0 0;
-    color: var(--fg-muted);
-    font-size: 15px;
-  }
-  .wide {
-    margin: 0;
-  }
-  .wide :global(img),
-  .shot-crop :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-  }
-  .wide figcaption {
-    margin-top: 12px;
-    font-size: 14px;
-    color: var(--fg-muted);
-  }
-  .shot-crop {
-    margin: 0;
-  }
-
-  /* 更多 */
-  .more dl {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 32px 40px;
-    margin: 28px 0 0;
-  }
-  .more dt {
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .more dd {
-    margin: 0;
-    color: var(--fg-muted);
-    font-size: 15px;
-  }
-
-  /* 画板：时序图、思维导图两张并排 */
-  .boards {
+  /* 画板：大图下面两张并排 */
+  .pair {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px 32px;
-    margin-top: 28px;
-  }
-  .boards figure {
-    margin: 0;
-  }
-  .boards :global(img) {
-    display: block;
+    gap: 32px;
     width: 100%;
-    height: auto;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
   }
-  .boards figcaption {
-    margin-top: 12px;
-    font-size: 15px;
-    color: var(--fg-muted);
+  .pair .shot {
+    margin-top: 32px;
   }
-  .boards strong {
-    display: block;
-    color: var(--fg);
+  .pair figcaption {
+    margin-top: 16px;
     font-size: 17px;
-    margin-bottom: 2px;
+    font-weight: 600;
   }
 
-  /* 常见问题 */
-  .faq h2 {
-    margin-bottom: 24px;
+  /* 视频紧跟在放映后面，同一条深色带 */
+  .video {
+    padding-top: 0;
   }
+  .video .wrap > :global(*) {
+    width: 100%;
+    text-align: left;
+  }
+
+  /* 还有更多 */
+  .more {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 56px 48px;
+    width: 100%;
+    max-width: 960px;
+    margin: 80px 0 0;
+  }
+  .more dt {
+    font-size: 21px;
+    font-weight: 600;
+  }
+  .more dd {
+    margin: 6px 0 0;
+    color: var(--fg-muted);
+  }
+
+  /* 常见问题：左对齐才好读 */
   .qa {
-    max-width: 820px;
-    border-top: 1px solid var(--fg);
+    width: 100%;
+    max-width: 760px;
+    margin-top: 64px;
+    text-align: left;
   }
   .qa details {
+    border-top: 1px solid var(--border);
+  }
+  .qa details:last-child {
     border-bottom: 1px solid var(--border);
   }
   .qa summary {
     display: flex;
     justify-content: space-between;
     gap: 16px;
-    padding: 18px 0;
-    font-size: 17px;
+    padding: 22px 0;
+    font-size: 18px;
     font-weight: 600;
     cursor: pointer;
     list-style: none;
@@ -754,106 +446,74 @@ const jsonld = [
   .qa summary::after {
     content: '+';
     flex: none;
-    font: 400 22px/1 var(--font-sans);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1;
     color: var(--fg-muted);
   }
   .qa details[open] summary::after {
     content: '−';
   }
   .qa details p {
-    padding: 0 40px 20px 0;
+    padding: 0 40px 24px 0;
     color: var(--fg-muted);
   }
 
-  /* 收尾：一块完整的面板，把下载放在页面最后一眼能看到的地方 */
-  .panel {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 32px 56px;
-    align-items: end;
-    padding: 56px;
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-  }
-  .panel img {
-    display: block;
-    margin-bottom: 20px;
+  /* 收尾 */
+  .end img {
+    margin-bottom: 32px;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
   }
   .end h2 {
-    font-size: clamp(30px, 4vw, 46px);
-    line-height: 1.2;
+    margin-bottom: 48px;
   }
-  .end .sub {
-    margin-top: 14px;
-    color: var(--fg-muted);
-    font-size: 17px;
+  .end :global(.dl a:not(.btn)) {
+    color: var(--on-sea);
   }
 
   @media (max-width: 1000px) {
+    .band {
+      padding: 112px 0;
+    }
     .hero,
-    .split,
-    .speed .intro {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 20px;
+    .video {
+      padding-top: 88px;
+      padding-bottom: 0;
     }
-    .hero {
-      gap: 40px;
-      padding-top: 48px;
+    .video {
+      padding-top: 0;
+      padding-bottom: 112px;
     }
-    .promo {
-      margin-top: 72px;
-      padding: 56px 0 44px;
-    }
-    h1 br {
-      display: none;
-    }
-    .speed,
-    .who,
-    .feature,
-    .themes,
-    .more,
-    .faq,
-    .end {
-      margin-top: 96px;
-    }
-    .split.align-start,
-    .split.media {
-      gap: 32px;
-    }
-    .more dl {
-      grid-template-columns: 1fr 1fr;
+    .shot {
+      margin-top: 48px;
     }
   }
   @media (max-width: 760px) {
-    .cols,
-    .facts,
-    .boards {
+    .band {
+      padding: 88px 0;
+    }
+    .hero {
+      padding-top: 64px;
+      padding-bottom: 0;
+      background: linear-gradient(var(--bg) 72%, var(--bg-alt) 72%);
+    }
+    .video {
+      padding-top: 0;
+      padding-bottom: 88px;
+    }
+    .stats {
+      gap: 40px;
+      margin-top: 56px;
+    }
+    .stats,
+    .pair,
+    .more {
       grid-template-columns: minmax(0, 1fr);
     }
-    .cols > div,
-    .cols > div + div {
-      padding: 20px 0;
-      border-left: 0;
-    }
-    .cols > div + div {
-      border-top: 1px solid var(--border);
-    }
-    .end h2 br {
-      display: none;
-    }
-    .panel {
-      grid-template-columns: minmax(0, 1fr);
-      padding: 32px 24px;
-    }
-  }
-  @media (max-width: 600px) {
-    .more dl {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 20px;
-    }
-    .all td {
-      white-space: normal;
+    .more {
+      gap: 32px;
+      margin-top: 48px;
     }
     .qa details p {
       padding-right: 0;

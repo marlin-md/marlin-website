@@ -3,7 +3,7 @@
 // 点了下载就在原地给出「接下来」的安装步骤；不是 Windows 的访客先告诉他目前只有 Windows 版。
 // data-event 留给以后接入的统计脚本（Umami / Plausible 都认这种写法）。
 import { onMounted, ref } from 'vue'
-import { downloadsFor, fetchLatest, formatDate, formatSize } from '../lib/release'
+import { downloadsFor, fetchLatest, formatSize } from '../lib/release'
 import { url } from '../lib/url'
 
 const props = defineProps<{
@@ -27,7 +27,7 @@ onMounted(async () => {
 <template>
   <div class="dl" :class="variant === 'page' ? 'is-page' : 'is-hero'">
     <p v-if="notWindows" class="os-note">
-      Marlin 目前只有 Windows 版，macOS 排在 3.0。可以把这个页面发到 Windows 电脑上再下载。
+      Marlin 是 Windows 应用，可以把这个页面发到 Windows 电脑上再下载。
     </p>
 
     <div v-if="variant !== 'page'" class="actions">
@@ -35,13 +35,12 @@ onMounted(async () => {
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
           <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        下载 Windows 版
+        下载
       </a>
-      <a class="btn btn-quiet" :href="dl.portable.url" data-event="download-portable" @click="started = 'portable'">便携版 zip</a>
     </div>
     <p v-if="variant !== 'page' && !started" class="meta">
-      v{{ dl.version }}<template v-if="dl.date">，{{ formatDate(dl.date) }}更新</template>。安装包 {{ formatSize(dl.setup.size) || '6.4 MB' }}，适用于 Windows 10 / 11（x64）。
-      <a class="more-link" :href="url('/download')">其他下载方式</a>
+      免费　v{{ dl.version }}　{{ formatSize(dl.setup.size) || '6.4 MB' }}　Windows 10 / 11
+      <a class="more-link" :href="url('/download')">更多下载选项</a>
     </p>
 
     <div v-if="variant === 'page'" class="options">

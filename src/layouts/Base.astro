@@ -2,6 +2,7 @@
 import '../styles/global.css'
 import { REPO_URL } from '../lib/release'
 import { BASE, url } from '../lib/url'
+import { SLOGAN } from '../lib/brand'
 
 interface Props {
   /** 页面名，会拼成「名 - Marlin 墨鳞」；首页用 fullTitle 给完整标题 */
@@ -15,14 +16,14 @@ interface Props {
 const {
   title,
   fullTitle,
-  description = 'Marlin（墨鳞）是 Windows 上免费的 Markdown 阅读器与编辑器：双击 .md 秒开，按 E 就地修改，流程图、思维导图在画板里画。安装包 6.4 MB。',
+  description = 'Marlin（墨鳞）是 Windows 上免费的 Markdown 阅读器与编辑器：双击秒开，所见即所改。',
   jsonld = []
 } = Astro.props
 const pageTitle = fullTitle ?? (title ? `${title} - Marlin 墨鳞` : 'Marlin 墨鳞')
 const path = Astro.url.pathname.slice(BASE.length).replace(/\/$/, '') || '/'
 const nav = [
   { href: '/#features', label: '功能' },
-  { href: '/#themes', label: '主题' },
+  { href: '/#video', label: '视频' },
   { href: '/#faq', label: '常见问题' },
   { href: '/changelog', label: '更新日志' }
 ]
@@ -45,8 +46,8 @@ const nav = [
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/png" href={url('/favicon.png')} />
     <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
-    <meta name="theme-color" content="#f4f3ef" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#17191d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1419" media="(prefers-color-scheme: dark)" />
     {jsonld.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
     <script is:inline>
       // 尽早套用用户手动选过的明暗，避免闪一下
@@ -94,8 +95,8 @@ const nav = [
     <footer class="site-foot">
       <div class="wrap foot">
         <div class="about">
-          <p class="motto">Markdown, at full speed.</p>
-          <p class="muted">Marlin 免费使用，用 Rust 与 Tauri 2 写成。没有账号，没有统计，不收集任何数据。</p>
+          <p class="motto">{SLOGAN}</p>
+          <p class="muted">免费使用，没有账号，不收集文档。</p>
         </div>
         <nav aria-label="页脚">
           <a href={url('/download')}>下载</a>
@@ -224,7 +225,7 @@ const nav = [
     max-width: 30em;
   }
   .motto {
-    font: italic 600 18px/1.4 var(--font-serif);
+    font: 600 17px/1.4 var(--font-sans);
     margin-bottom: 4px;
   }
   .muted {

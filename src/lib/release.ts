@@ -61,9 +61,3 @@ export async function fetchLatest(): Promise<Downloads | null> {
 export function formatSize(bytes?: number): string {
   return bytes ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : ''
 }
-
-/** 2026-10-05 → 10 月 5 日 */
-export function formatDate(date?: string): string {
-  const m = date?.match(/^\d{4}-(\d{2})-(\d{2})$/)
-  return m ? `${Number(m[1])} 月 ${Number(m[2])} 日` : ''
-}
