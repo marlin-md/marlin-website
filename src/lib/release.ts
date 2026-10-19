@@ -58,6 +58,30 @@ export async function fetchLatest(): Promise<Downloads | null> {
   }
 }
 
+/**
+ * 历次版本安装版与便携版的下载次数之和（GitHub 统计，含自动更新下的安装包）。失败返回 null。
+ * 首屏和页尾各有一个下载入口，共用一次请求。
+ */
+let downloadCount: Promise<number | null> | undefined
+export function fetchDownloadCount(): Promise<number | null> {
+  downloadCount ??= (async () => {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=100`, {
+        headers: { Accept: 'application/vnd.github+json' }
+      })
+      if (!res.ok) return null
+      const rels = (await res.json()) as { assets: { name: string; download_count: number }[] }[]
+      return rels
+        .flatMap((r) => r.assets)
+        .filter((a) => /\.(exe|zip)$/.test(a.name))
+        .reduce((n, a) => n + a.download_count, 0)
+    } catch {
+      return null
+    }
+  })()
+  return downloadCount
+}
+
 export function formatSize(bytes?: number): string {
   return bytes ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : ''
 }

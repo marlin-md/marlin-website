@@ -3,7 +3,7 @@
 // 点了下载就在原地给出「接下来」的安装步骤；不是 Windows 的访客先告诉他目前只有 Windows 版。
 // data-event 留给以后接入的统计脚本（Umami / Plausible 都认这种写法）。
 import { onMounted, ref } from 'vue'
-import { downloadsFor, fetchLatest, formatSize } from '../lib/release'
+import { downloadsFor, fetchDownloadCount, fetchLatest, formatSize } from '../lib/release'
 import { url } from '../lib/url'
 
 const props = defineProps<{
@@ -16,9 +16,13 @@ const props = defineProps<{
 const dl = ref(downloadsFor(props.version, props.date))
 const started = ref<'setup' | 'portable' | null>(null)
 const notWindows = ref(false)
+// 累计下载到这个数才显示，数字太小显示出来反而减分
+const SHOW_DOWNLOADS_FROM = 500
+const downloads = ref<number | null>(null)
 
 onMounted(async () => {
   notWindows.value = !/Windows/i.test(navigator.userAgent)
+  if (props.variant !== 'page') fetchDownloadCount().then((n) => (downloads.value = n))
   const latest = await fetchLatest()
   if (latest) dl.value = latest
 })
@@ -39,7 +43,7 @@ onMounted(async () => {
       </a>
     </div>
     <p v-if="variant !== 'page' && !started" class="meta">
-      免费　v{{ dl.version }}　{{ formatSize(dl.setup.size) || '6.4 MB' }}　Windows 10 / 11
+      免费　v{{ dl.version }}　{{ formatSize(dl.setup.size) || '6.4 MB' }}　Windows 10 / 11<template v-if="downloads && downloads >= SHOW_DOWNLOADS_FROM">　已下载 {{ downloads.toLocaleString('zh-CN') }} 次</template>
       <a class="more-link" :href="url('/download')">更多下载选项</a>
     </p>
 
