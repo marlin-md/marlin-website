@@ -1,4 +1,4 @@
-// 站内路径都从这里拼：默认部署在 GitHub Pages 的 /marlin-website/ 下，
+// 站内路径都从这里拼：默认部署在 https://marlin-md.cn 根目录，
 // 换域名时构建前设 SITE_URL、BASE_PATH（见 astro.config.mjs）。
 export const BASE = import.meta.env.BASE_URL.replace(/\/$/, '')
 

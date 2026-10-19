@@ -1,4 +1,4 @@
-# 推到 main 就构建并发布到 GitHub Pages：https://marlin-md.github.io/marlin-website/
+# 推到 main 就构建并发布到 GitHub Pages（境外线路的 https://marlin-md.cn；国内线路在阿里云服务器上，见 README）
 name: Deploy
 
 on:
