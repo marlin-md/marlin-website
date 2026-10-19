@@ -42,7 +42,7 @@ scripts/sync.mjs、video.mjs
 ## 待办
 
 - 网站地址 https://marlin-md.cn ，同一份构建部署两处：国内线路解析到阿里云服务器（`/app/marlin-website/dist`，Nginx），境外线路解析到 GitHub Pages（推到 main 自动发布，见 `.github/workflows/deploy.yml`，域名在 `public/CNAME`）。服务器部署与证书见运维仓库 ops-pilot 任务 010
-- 更新服务器上的网站：`pnpm build`，再 `rsync -az --delete dist/ blog-server:/app/marlin-website/dist/`（还没接进 Actions）
+- 推到 main 后 Actions 同时发布两处：GitHub Pages，以及用 rsync 同步到服务器（job `server`，发布用户 `deploy-marlin`，密钥在仓库 Secrets：`DEPLOY_SSH_KEY`、`DEPLOY_KNOWN_HOSTS`、`DEPLOY_HOST`）
 - 部署到别的地址：构建前设 `SITE_URL`、`BASE_PATH`（Git Bash 里加 `MSYS_NO_PATHCONV=1`，否则 `/` 会被改写成 Git 的安装目录）。canonical、`sitemap.xml`、`robots.txt`、`llms.txt` 都跟着 `site` 生成（`src/pages/*.ts`）
 - 接入统计（Umami 或 Plausible）：下载按钮已带 `data-event="download-setup"` / `"download-portable"`
 - 拿到代码签名证书后：删掉下载页「第一次运行时的安全提示」、下载引导里的 SmartScreen 说明、常见问题里对应的一条

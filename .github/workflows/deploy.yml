@@ -34,3 +34,26 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # 国内线路：同一份构建同步到阿里云服务器。发布用户 deploy-marlin 的密钥只能用 rsync 写 /app/marlin-website/dist（rrsync）
+  server:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+      - name: 解包
+        run: mkdir site && tar -xf artifact.tar -C site
+      - name: 同步到服务器
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          rsync -rlz --checksum --delete --delay-updates --chmod=D755,F644 \
+            -e "ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes" \
+            site/ "deploy-marlin@$HOST:./"
