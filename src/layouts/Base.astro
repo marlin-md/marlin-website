@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css'
 import { REPO_URL } from '../lib/release'
-import { BASE, url } from '../lib/url'
+import { BASE, absUrl, url } from '../lib/url'
 import { SLOGAN } from '../lib/brand'
 
 interface Props {
@@ -21,6 +21,8 @@ const {
 } = Astro.props
 const pageTitle = fullTitle ?? (title ? `${title} - Marlin 墨鳞` : 'Marlin 墨鳞')
 const path = Astro.url.pathname.slice(BASE.length).replace(/\/$/, '') || '/'
+// 页面按目录输出（download/index.html），正式地址统一带结尾斜杠
+const canonical = absUrl(path === '/' ? '/' : `${path}/`)
 const nav = [
   { href: '/#features', label: '功能' },
   { href: '/#video', label: '视频' },
@@ -36,11 +38,15 @@ const nav = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href={url('/sitemap.xml')} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="zh_CN" />
     <meta property="og:site_name" content="Marlin 墨鳞" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(url('/og.png'), Astro.site).href} />
+    <meta property="og:image" content={absUrl('/og.png')} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />

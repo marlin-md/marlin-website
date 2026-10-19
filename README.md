@@ -42,6 +42,6 @@ scripts/sync.mjs、video.mjs
 ## 待办
 
 - 现在用 GitHub Pages 部署（推到 main 自动发布，见 `.github/workflows/deploy.yml`），地址 https://marlin-md.github.io/marlin-website/ 。站内路径都经 `src/lib/url.ts` 加上 `/marlin-website` 前缀
-- 换成自己的域名后：`astro.config.mjs` 改 `site`、去掉 `base`，Pages 设置里填域名；加 `@astrojs/sitemap` 和 canonical
+- 部署到自己的域名：构建前设 `SITE_URL`、`BASE_PATH`，如 `SITE_URL=https://marlin-md.cn BASE_PATH=/ pnpm build`（Git Bash 里加 `MSYS_NO_PATHCONV=1`，否则 `/` 会被改写成 Git 的安装目录）。canonical、`sitemap.xml`、`robots.txt`、`llms.txt` 都跟着 `site` 生成（`src/pages/*.ts`）
 - 接入统计（Umami 或 Plausible）：下载按钮已带 `data-event="download-setup"` / `"download-portable"`
 - 拿到代码签名证书后：删掉下载页「第一次运行时的安全提示」、下载引导里的 SmartScreen 说明、常见问题里对应的一条

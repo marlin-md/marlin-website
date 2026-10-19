@@ -6,8 +6,8 @@ import PromoVideo from '../components/PromoVideo.vue'
 import { latest } from '../lib/latest'
 import { faqs } from '../lib/faq'
 import { TOUR_CHAPTERS, TOUR_DURATION } from '../lib/tour'
-import { downloadsFor } from '../lib/release'
-import { url } from '../lib/url'
+import { downloadsFor, REPO_URL } from '../lib/release'
+import { absUrl, url } from '../lib/url'
 import { SLOGAN, SLOGAN_EN } from '../lib/brand'
 import { VIDEO_VERSION } from '../lib/video'
 // 截图来自 promo-video/scripts/capture（测试版 + 示例工作区，2 倍图）
@@ -46,13 +46,29 @@ const jsonld = [
     name: 'Marlin',
     alternateName: '墨鳞',
     description,
+    url: absUrl('/'),
+    image: absUrl('/og.png'),
+    screenshot: new URL(readingShot.src, absUrl('/')).href,
     applicationCategory: 'UtilitiesApplication',
+    applicationSubCategory: 'Markdown 编辑器',
     operatingSystem: 'Windows 10, Windows 11',
+    processorRequirements: 'x64',
+    inLanguage: 'zh-CN',
+    isAccessibleForFree: true,
+    featureList: ['双击秒开', '实时预览编辑', '流程图、时序图、思维导图画板', 'Git 同步', 'F5 放映', '数学公式', '导出 PDF、HTML', '全目录搜索'],
     softwareVersion: latest.version,
     datePublished: latest.date,
     fileSize: '6.4 MB',
     downloadUrl: dl.setup.url,
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY' }
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY' },
+    author: { '@type': 'Organization', name: 'Marlin', url: absUrl('/'), sameAs: [REPO_URL] }
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Marlin 墨鳞',
+    url: absUrl('/'),
+    inLanguage: 'zh-CN'
   },
   {
     '@context': 'https://schema.org',
