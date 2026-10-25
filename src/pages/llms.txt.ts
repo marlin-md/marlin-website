@@ -11,7 +11,7 @@ const text = `# Marlin 墨鳞
 
 - 最新版本：${latest.version}（${latest.date}）
 - 系统：Windows 10 1809 及以上、Windows 11，x64
-- 价格：免费，不需要注册账号；文档只在本机，不上传
+- 价格：免费，不需要注册账号；文档只在本机，不上传（只有用户自己配置 AI 模型并发起 AI 操作时，才把选定的内容发给所选模型）
 - 安装包：6.4 MB；另有免安装的便携版
 - 技术：Tauri 2 + Rust，使用系统自带的 WebView2，不打包浏览器内核
 
@@ -26,6 +26,7 @@ const text = `# Marlin 墨鳞
 - 数学公式：KaTeX 排版
 - 导出：A4 PDF 或单个 HTML 文件
 - 主题：内置 6 套，主题就是一份 CSS
+- AI：接 DeepSeek、通义千问、Kimi 等 OpenAI 兼容接口或本机的 Ollama、LM Studio；润色、翻译、续写，用一句话画图、改图，文档摘要；结果逐处预览，接受了才改文档
 - 自动更新：有新版本时状态栏提示，点一下安装
 
 ## 链接
