@@ -27,6 +27,8 @@ const text = `# Marlin 墨鳞
 - 导出：A4 PDF 或单个 HTML 文件
 - 主题：内置 6 套，主题就是一份 CSS
 - AI：接 DeepSeek、通义千问、Kimi 等 OpenAI 兼容接口或本机的 Ollama、LM Studio；润色、翻译、续写，用一句话画图、改图，文档摘要；结果逐处预览，接受了才改文档
+- MCP：Claude Code、Codex、Cursor 等 AI 助手可以读写打开的文档，写进编辑器、一步撤销（预览，默认关）
+- 文档历史：每次保存留一份，对比、还原
 - 自动更新：有新版本时状态栏提示，点一下安装
 
 ## 链接
