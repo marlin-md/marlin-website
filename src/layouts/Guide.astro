@@ -22,7 +22,23 @@ const next = at >= 0 ? (chapters[at + 1] ?? null) : slug ? null : chapters[0]
   <div class="wrap guide">
     <aside>
       <a class="home" href={href('')} aria-current={slug ? undefined : 'page'}>使用指南</a>
-      <nav aria-label="指南目录">
+      {/* 窄屏时左边的目录收进这里，默认收起；指南首页的正文就是目录，不用 */}
+      {at >= 0 && (
+        <details class="toc-m">
+          <summary>目录<span>{chapters[at].title}</span></summary>
+          <nav aria-label="指南目录（窄屏）">
+            {parts.map((p) => (
+              <div class="part">
+                <p class="part-name">{p.name}</p>
+                {p.chapters.map((c) => (
+                  <a href={href(c.slug)} aria-current={c.slug === slug ? 'page' : undefined}>{c.title}</a>
+                ))}
+              </div>
+            ))}
+          </nav>
+        </details>
+      )}
+      <nav class="toc" aria-label="指南目录">
         {parts.map((p) => (
           <div class="part">
             <p class="part-name">{p.name}</p>
@@ -81,6 +97,9 @@ const next = at >= 0 ? (chapters[at + 1] ?? null) : slug ? null : chapters[0]
     font-weight: 600;
     color: var(--fg);
     text-decoration: none;
+  }
+  .toc-m {
+    display: none;
   }
   .part {
     margin-bottom: 14px;
@@ -277,8 +296,58 @@ const next = at >= 0 ? (chapters[at + 1] ?? null) : slug ? null : chapters[0]
       position: static;
       max-height: none;
     }
-    nav[aria-label='指南目录'] {
+    .toc {
       display: none;
+    }
+    .home {
+      margin-bottom: 10px;
+    }
+    .toc-m {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    .toc-m summary {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .toc-m summary::after {
+      content: '';
+      flex-shrink: 0;
+      align-self: center;
+      width: 7px;
+      height: 7px;
+      margin: 0 4px 4px auto;
+      border: solid var(--fg-muted);
+      border-width: 0 1.5px 1.5px 0;
+      transform: rotate(45deg);
+    }
+    .toc-m[open] summary::after {
+      margin-bottom: -2px;
+      transform: rotate(-135deg);
+    }
+    .toc-m summary span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 400;
+      color: var(--fg-muted);
+    }
+    .toc-m nav {
+      padding: 4px 14px 6px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .toc-m .part {
+      margin: 10px 0;
+    }
+    .toc-m nav a {
+      padding: 7px 10px;
     }
     .doc :global(h1) {
       font-size: 28px;

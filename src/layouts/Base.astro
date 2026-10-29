@@ -74,7 +74,7 @@ const nav = [
           <span class="cn">墨鳞</span>
         </a>
         <nav aria-label="主导航">
-          <span class="links">
+          <span class="links" id="site-links">
             {nav.map((n) => (
               <a href={url(n.href)} aria-current={path === n.href || (n.href === '/guide' && path.startsWith('/guide/')) ? 'page' : undefined}>{n.label}</a>
             ))}
@@ -91,6 +91,12 @@ const nav = [
             </svg>
           </button>
           <a class="cta" href={url('/download')} aria-current={path === '/download' ? 'page' : undefined}>下载</a>
+          {/* 窄屏时上面那组链接收起来，点这个下拉出来 */}
+          <button class="icon menu" type="button" aria-label="菜单" title="菜单" aria-expanded="false" aria-controls="site-links">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+            </svg>
+          </button>
         </nav>
       </div>
     </header>
@@ -126,6 +132,27 @@ const nav = [
         try {
           localStorage.setItem('theme', next)
         } catch {}
+      })
+
+      // 窄屏的菜单：点 ☰ 开合；点了链接、点别处、按 Esc 都收起
+      const head = document.querySelector('.site-head')
+      const menu = document.querySelector<HTMLButtonElement>('.menu')
+      const setOpen = (open: boolean) => {
+        head?.classList.toggle('open', open)
+        menu?.setAttribute('aria-expanded', String(open))
+      }
+      menu?.addEventListener('click', () => setOpen(!head?.classList.contains('open')))
+      document.querySelector('#site-links')?.addEventListener('click', (e) => {
+        if ((e.target as Element).closest('a')) setOpen(false)
+      })
+      document.addEventListener('click', (e) => {
+        if (!head?.contains(e.target as Node)) setOpen(false)
+      })
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && head?.classList.contains('open')) {
+          setOpen(false)
+          menu?.focus()
+        }
       })
     </script>
   </body>
@@ -243,9 +270,35 @@ const nav = [
     margin-left: -10px;
     flex-wrap: wrap;
   }
+  .menu {
+    display: none;
+  }
   @media (max-width: 860px) {
     .links {
       display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      margin: 0;
+      padding: 6px 12px 12px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    }
+    .site-head.open .links {
+      display: flex;
+    }
+    .links a {
+      padding: 12px 12px;
+      font-size: 16px;
+    }
+    .menu {
+      display: grid;
+      margin-left: 4px;
     }
   }
   @media (max-width: 420px) {
