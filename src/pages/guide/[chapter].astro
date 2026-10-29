@@ -1,0 +1,24 @@
+---
+// 使用指南的一章：src/content/guide/<chapter>.md，网址 /guide/<chapter>/
+import type { MarkdownInstance } from 'astro'
+import Guide from '../../layouts/Guide.astro'
+import { chapters } from '../../lib/guide'
+
+export function getStaticPaths() {
+  const pages = import.meta.glob<MarkdownInstance<Record<string, unknown>>>('../../content/guide/*.md', { eager: true })
+  return Object.entries(pages)
+    .map(([file, page]) => ({ chapter: file.replace(/^.*\/(.+)\.md$/, '$1'), page }))
+    .filter(({ chapter }) => chapter !== 'README')
+    .map(({ chapter, page }) => ({ params: { chapter }, props: { page } }))
+}
+
+const { chapter } = Astro.params
+const { page } = Astro.props as { page: MarkdownInstance<Record<string, unknown>> }
+const title = page.getHeadings().find((h) => h.depth === 1)?.text ?? chapter
+const blurb = chapters.find((c) => c.slug === chapter)?.blurb
+const { Content } = page
+---
+
+<Guide title={title} slug={chapter} description={blurb ? `Marlin 使用指南 · ${title}：${blurb}` : `Marlin 使用指南 · ${title}`}>
+  <Content />
+</Guide>

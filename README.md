@@ -6,7 +6,7 @@ Marlin（墨鳞）的产品网站，Astro 7 + Vue 组件（交互部分），纯
 
 ```bash
 pnpm install
-pnpm sync <主仓库本地路径>   # 同步更新日志、品牌图；仓库公开后可省略路径，直接从 GitHub 拉
+pnpm sync <主仓库本地路径>   # 同步更新日志、使用指南、品牌图
 pnpm video [视频路径]         # 转出网站用的 1080p / 720p 与封面，默认取 ../promo-video/marlin-tour.mp4
 pnpm dev                      # http://localhost:4321
 pnpm build                    # 输出到 dist/
@@ -19,6 +19,7 @@ pnpm check                    # 类型检查
 |---|---|---|
 | 更新日志、最新版本号与日期 | 主仓库 `docs/CHANGELOG.md` | `pnpm sync` |
 | Logo、favicon | 主仓库 `brand/` | `pnpm sync` |
+| 使用指南 `/guide/`（`src/content/guide/`、`public/guide/images/`） | 主仓库 `guide/`（Markdown 和截图，截图由主仓库的 `pnpm guide:shots` 生成） | `pnpm sync <主仓库本地路径>`：拷贝时把相对链接、提示框、按键、Mermaid 换成网站上的写法（`scripts/guide-markdown.mjs`）；侧栏目录读指南首页（`src/lib/guide.ts`） |
 | 截图 `src/assets/shots/`（2 倍图，Astro 转成 WebP） | promo-video 的 `scripts/capture`：用主仓库的测试版打开示例工作区截取，和导览视频同一批 | 重新截取后拷过来；`search-crop.png` 是 `search.png` 左上 1520×1080 的裁剪 |
 | 下载链接 | 公开的发布仓库 `marlin-md/marlin-releases`（源码仓库不公开）：`Marlin_<版本>_x64-setup.exe` / `-portable.zip`，tag 为 `v<版本>` | 自动：构建时按版本号拼，打开页面时再查 GitHub 最新 Release |
 | 实测数字、功能文案 | 主仓库 README 与 `docs/CHANGELOG.md`，手工同步 | 改 `src/pages/index.astro`；口号在 `src/lib/brand.ts` |
@@ -30,13 +31,13 @@ pnpm check                    # 类型检查
 
 ```
 src/
-  pages/        index（首页）、download、changelog
-  layouts/      Base.astro：顶栏、页脚、明暗切换
+  pages/        index（首页）、download、changelog、guide/（使用指南首页和每一章）
+  layouts/      Base.astro：顶栏、页脚、明暗切换；Guide.astro：指南的目录侧栏、上一章 / 下一章、Mermaid
   components/   PromoVideo（宣传视频与章节条）、DownloadLinks（下载与安装引导）
   lib/          release.ts（下载链接）、latest.ts（从更新日志解析版本）、faq.ts（常见问题）、tour.ts（导览视频章节）、video.ts（视频地址的版本摘要，pnpm video 生成）
-  content/      changelog.md（sync 生成，不要手改）
+  content/      changelog.md、guide/（sync 生成，不要手改）
   styles/       global.css：配色与字体 token（品牌色取自主仓库 docs/05-DESIGN.md）
-scripts/sync.mjs、video.mjs
+scripts/sync.mjs、guide-markdown.mjs、video.mjs
 ```
 
 ## 待办

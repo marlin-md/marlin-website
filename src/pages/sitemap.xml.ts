@@ -1,9 +1,10 @@
 // 站点地图：页面少，直接列出；首页和下载页的更新时间取最新版本的发布日期
 import type { APIRoute } from 'astro'
 import { latest } from '../lib/latest'
+import { chapters } from '../lib/guide'
 import { absUrl } from '../lib/url'
 
-const pages = ['/', '/download/', '/changelog/']
+const pages = ['/', '/download/', '/changelog/', '/guide/', ...chapters.map((c) => `/guide/${c.slug}/`)]
 
 export const GET: APIRoute = () =>
   new Response(

@@ -27,6 +27,7 @@ const nav = [
   { href: '/#features', label: '功能' },
   { href: '/#video', label: '视频' },
   { href: '/#faq', label: '常见问题' },
+  { href: '/guide', label: '使用指南' },
   { href: '/changelog', label: '更新日志' }
 ]
 ---
@@ -75,7 +76,7 @@ const nav = [
         <nav aria-label="主导航">
           <span class="links">
             {nav.map((n) => (
-              <a href={url(n.href)} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>
+              <a href={url(n.href)} aria-current={path === n.href || (n.href === '/guide' && path.startsWith('/guide/')) ? 'page' : undefined}>{n.label}</a>
             ))}
           </span>
           <a class="icon" href={REPO_URL} rel="noopener" aria-label="GitHub 发布页" title="GitHub 发布页">
@@ -106,6 +107,7 @@ const nav = [
         </div>
         <nav aria-label="页脚">
           <a href={url('/download')}>下载</a>
+          <a href={url('/guide/')}>使用指南</a>
           <a href={url('/changelog')}>更新日志</a>
           <a href={url('/#faq')}>常见问题</a>
           <a href={REPO_URL} rel="noopener">GitHub</a>

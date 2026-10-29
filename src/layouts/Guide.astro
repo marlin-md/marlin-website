@@ -1,0 +1,287 @@
+---
+// 使用指南的一页：左边是目录（按指南首页的分组），右边是正文，底下是上一章 / 下一章。
+import Base from './Base.astro'
+import { chapters, parts } from '../lib/guide'
+import { url } from '../lib/url'
+
+interface Props {
+  title: string
+  description?: string
+  /** 这一页的文件名（不带 .md）；首页是 '' */
+  slug: string
+}
+const { title, description, slug } = Astro.props
+const href = (s: string) => url(s ? `/guide/${s}/` : '/guide/')
+const at = chapters.findIndex((c) => c.slug === slug)
+const prev = at > 0 ? chapters[at - 1] : null
+// 指南首页的下一章是第一章
+const next = at >= 0 ? (chapters[at + 1] ?? null) : slug ? null : chapters[0]
+---
+
+<Base title={slug ? `${title} - 使用指南` : '使用指南'} description={description}>
+  <div class="wrap guide">
+    <aside>
+      <a class="home" href={href('')} aria-current={slug ? undefined : 'page'}>使用指南</a>
+      <nav aria-label="指南目录">
+        {parts.map((p) => (
+          <div class="part">
+            <p class="part-name">{p.name}</p>
+            {p.chapters.map((c) => (
+              <a href={href(c.slug)} aria-current={c.slug === slug ? 'page' : undefined}>{c.title}</a>
+            ))}
+          </div>
+        ))}
+      </nav>
+    </aside>
+    <article class="doc">
+      <slot />
+      {(prev || next) && (
+        <nav class="pager" aria-label="上一章、下一章">
+          {prev ? <a class="prev" href={href(prev.slug)}><span>上一章</span>{prev.title}</a> : <span />}
+          {next && <a class="next" href={href(next.slug)}><span>下一章</span>{next.title}</a>}
+        </nav>
+      )}
+    </article>
+  </div>
+</Base>
+
+<script>
+  // 指南里的 Mermaid 示意图：有才加载 mermaid，按网站当前的明暗画
+  const blocks = document.querySelectorAll<HTMLElement>('.doc pre.mermaid')
+  if (blocks.length) {
+    const root = document.documentElement
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+    import('mermaid').then(async ({ default: mermaid }) => {
+      mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'neutral', fontFamily: 'inherit' })
+      await mermaid.run({ nodes: [...blocks] })
+    })
+  }
+</script>
+
+<style>
+  .guide {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 56px;
+    padding-top: 48px;
+    padding-bottom: 80px;
+  }
+  aside {
+    position: sticky;
+    top: 84px;
+    align-self: start;
+    max-height: calc(100vh - 100px);
+    overflow: auto;
+    font-size: 14px;
+  }
+  .home {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .part {
+    margin-bottom: 14px;
+  }
+  .part-name {
+    margin: 0 0 4px;
+    font-size: 12px;
+    color: var(--fg-muted);
+  }
+  nav a {
+    display: block;
+    padding: 4px 10px;
+    margin-left: -10px;
+    border-radius: 6px;
+    color: var(--fg);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+  nav a:hover {
+    background: var(--hover);
+  }
+  nav a[aria-current='page'],
+  .home[aria-current='page'] {
+    color: var(--accent);
+  }
+  nav a[aria-current='page'] {
+    background: var(--accent-soft);
+  }
+
+  .doc {
+    max-width: 780px;
+    font-size: 15.5px;
+    line-height: 1.75;
+  }
+  .doc :global(h1) {
+    font-size: 34px;
+    line-height: 1.25;
+    margin: 0 0 20px;
+  }
+  .doc :global(h2) {
+    font-size: 24px;
+    margin: 48px 0 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: 80px;
+  }
+  .doc :global(h3) {
+    font-size: 18px;
+    margin: 32px 0 8px;
+    scroll-margin-top: 80px;
+  }
+  .doc :global(p),
+  .doc :global(ul),
+  .doc :global(ol) {
+    margin: 0 0 14px;
+  }
+  .doc :global(ul),
+  .doc :global(ol) {
+    padding-left: 1.4em;
+  }
+  .doc :global(li) {
+    margin: 4px 0;
+  }
+  .doc :global(img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 8px 0 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .doc :global(code) {
+    font: 0.88em var(--font-mono);
+    background: var(--hover);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+  .doc :global(kbd) {
+    display: inline-block;
+    padding: 0.05em 0.45em;
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    background: var(--bg-elev);
+    font: 0.85em var(--font-mono);
+    white-space: nowrap;
+  }
+  .doc :global(pre) {
+    margin: 0 0 16px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    overflow: auto;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .doc :global(pre code) {
+    background: none;
+    padding: 0;
+  }
+  .doc :global(pre.mermaid) {
+    background: none;
+    text-align: center;
+    color: transparent;
+  }
+  .doc :global(pre.mermaid[data-processed]) {
+    color: inherit;
+  }
+  .doc :global(table) {
+    width: 100%;
+    margin: 0 0 18px;
+    border-collapse: collapse;
+    font-size: 14.5px;
+    display: block;
+    overflow-x: auto;
+  }
+  .doc :global(th),
+  .doc :global(td) {
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+  .doc :global(th) {
+    background: var(--bg-alt);
+    font-weight: 600;
+  }
+  .doc :global(blockquote) {
+    margin: 0 0 16px;
+    padding: 8px 16px;
+    border-left: 3px solid var(--border);
+    color: var(--fg-muted);
+  }
+  /* 提示框：第一行是 <strong class="alert-title" data-kind="note">注意</strong>（scripts/guide-markdown.mjs） */
+  .doc :global(blockquote:has(.alert-title)) {
+    border-left-color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 8px 8px 0;
+    color: var(--fg);
+  }
+  .doc :global(blockquote:has(.alert-title[data-kind='warning'], .alert-title[data-kind='caution'])) {
+    border-left-color: var(--danger);
+    background: var(--danger-soft);
+  }
+  .doc :global(blockquote p:last-child) {
+    margin-bottom: 0;
+  }
+  .doc :global(.alert-title) {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--accent);
+  }
+  .doc :global(.alert-title[data-kind='warning']),
+  .doc :global(.alert-title[data-kind='caution']) {
+    color: var(--danger);
+  }
+  .doc :global(a) {
+    color: var(--accent);
+  }
+
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 14px;
+    margin: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-width: 48%;
+  }
+  .pager span {
+    font-size: 12px;
+    color: var(--fg-muted);
+  }
+  .pager .next {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  @media (max-width: 820px) {
+    .guide {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding-top: 28px;
+    }
+    aside {
+      position: static;
+      max-height: none;
+    }
+    nav[aria-label='指南目录'] {
+      display: none;
+    }
+    .doc :global(h1) {
+      font-size: 28px;
+    }
+  }
+</style>
