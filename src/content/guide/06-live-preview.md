@@ -8,7 +8,7 @@
 
 ## 符号只在光标所在处露出来
 
-标题、加粗、斜体、链接、列表、引用、提示框都按阅读时的样子显示。光标移到哪里，哪里才露出 Markdown 的符号，方便你改；光标离开，又恢复成排好版的样子。
+标题、加粗、斜体、链接、列表、引用、提示框都按阅读时的样子显示。光标移到哪里，哪里才露出 Markdown 的符号，方便你改；光标离开，又恢复成排好版的样子。选中文字时不露符号，选中的字不会挪动；要加粗、加链接，用选区上方的 [格式工具条](../05-editing/#选中文字时的格式工具条)。
 
 <a class="shot" href="../images/live-reveal.webp" target="_blank"><img src="../images/live-reveal.webp" alt="光标移到哪里，哪里露出符号" loading="lazy" decoding="async"></a>
 

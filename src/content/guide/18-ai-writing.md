@@ -11,15 +11,15 @@
 任选一种：
 
 - <kbd>Ctrl+J</kbd>
-- 选中文字停一下，旁边出现「✦ AI」，点它
+- 选中文字停一下，上方出现格式工具条，点最右边的「✦ AI」
 - 编辑器里右键 →「AI 润色」「AI 修正错别字和语法」，或「AI 命令…」
 - ☰ →「编辑」→「AI 命令…」
 
 阅读时按 <kbd>Ctrl+J</kbd>，Marlin 会先进入编辑，再打开命令面板。
 
-<a class="shot" href="../images/ai-button.webp" target="_blank"><img src="../images/ai-button.webp" alt="选中后的「✦ AI」" loading="lazy" decoding="async"></a>
+<a class="shot" href="../images/ai-button.webp" target="_blank"><img src="../images/ai-button.webp" alt="格式工具条上的「✦ AI」" loading="lazy" decoding="async"></a>
 
-不想看到这个按钮：设置 →「AI」，取消「选中文字时显示 ✦ AI 按钮」。
+工具条的其他按钮见 [编辑基础](../05-editing/#选中文字时的格式工具条)。不想看到工具条：设置 →「编辑器」，取消「选中文字时显示格式工具条」。
 
 ## 命令面板
 

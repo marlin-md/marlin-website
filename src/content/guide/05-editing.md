@@ -71,10 +71,25 @@
 
 选中文字后：
 
-- <kbd>Ctrl+B</kbd> 加粗，<kbd>Ctrl+I</kbd> 斜体，<kbd>Ctrl+K</kbd> 插入链接
+- 上方的格式工具条（见下一节）
+- <kbd>Ctrl+B</kbd> 加粗，<kbd>Ctrl+I</kbd> 斜体，<kbd>Ctrl+K</kbd> 加链接
 - 右键 →「格式」：加粗、斜体、删除线、行内代码、链接
 
-已经是加粗的文字再按一次，就去掉加粗。没有选中文字时，插入一对标记，光标在中间，接着打字就行。
+已经是加粗的文字再按一次，就去掉加粗；只选中粗体里的几个字也一样，整段粗体都去掉。选区两头的空格不会被包进去；选了好几段时每段分别加。没有选中文字时，插入一对标记，光标在中间，接着打字就行。
+
+## 选中文字时的格式工具条
+
+在实时预览和分栏里，选中文字停一下，选区上方出现一条工具条：
+
+<a class="shot" href="../images/format-bar.webp" target="_blank"><img src="../images/format-bar.webp" alt="选中文字后出现的格式工具条" loading="lazy" decoding="async"></a>
+
+1. 加粗、斜体、删除线、行内代码：点一下加上，再点去掉。选中的字已经是这种格式时，按钮是按下的样子
+2. 链接：工具条变成一个输入框，粘贴网址按 <kbd>Enter</kbd>（<kbd>Esc</kbd> 取消）。已经是链接时框里是原来的网址，可以改；清空后 <kbd>Enter</kbd> 去掉链接、文字留下。选中的字本身是网址时，直接变成链接
+3. ✦ AI：打开 AI 命令，见 [用 AI 写](../18-ai-writing/)。没配 AI 模型时没有这个按钮
+
+点完选区还在，可以接着点别的；每点一次，<kbd>Ctrl+Z</kbd> 撤回一步。光标在行内代码里时，加粗、斜体、删除线点不了。
+
+代码块、表格、图表里，以及仅源码布局里不出现。不想要：设置 →「编辑器」，取消「选中文字时显示格式工具条」。
 
 <a class="shot" href="../images/edit-format.webp" target="_blank"><img src="../images/edit-format.webp" alt="右键菜单里的「格式」" loading="lazy" decoding="async"></a>
 
