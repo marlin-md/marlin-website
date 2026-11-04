@@ -5,7 +5,7 @@ export interface Chapter {
   label: string
 }
 
-export const TOUR_DURATION = 251.8
+export const TOUR_DURATION = 294.4
 
 export const TOUR_CHAPTERS: Chapter[] = [
   { start: 0, label: '开场' },
@@ -14,11 +14,13 @@ export const TOUR_CHAPTERS: Chapter[] = [
   { start: 47.8, label: '实时预览' },
   { start: 86.4, label: '表格' },
   { start: 118.5, label: '画板' },
-  { start: 163, label: '/ 插入' },
-  { start: 174.9, label: '属性与导出' },
-  { start: 185.8, label: '工作区' },
-  { start: 198.3, label: 'Git 同步' },
-  { start: 216, label: '放映' },
-  { start: 231.1, label: '主题' },
-  { start: 239.6, label: '实测数据' }
+  { start: 163, label: 'AI 写作' },
+  { start: 194.5, label: '/ 插入' },
+  { start: 206.4, label: '属性与导出' },
+  { start: 217.3, label: '工作区' },
+  { start: 229.8, label: 'Git 同步' },
+  { start: 247.5, label: '文档历史' },
+  { start: 258.6, label: '放映' },
+  { start: 273.7, label: '主题' },
+  { start: 282.2, label: '实测数据' }
 ]

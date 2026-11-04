@@ -18,17 +18,25 @@ import seqShot from '../assets/shots/seq-4.png'
 import mindShot from '../assets/shots/mind-4.png'
 import gitShot from '../assets/shots/git-diff.png'
 import presentShot from '../assets/shots/present-pen.png'
+import formatShot from '../assets/shots/format-bar.png'
+import historyShot from '../assets/shots/history.png'
+import aiShot from '../assets/shots/ai-review.png'
+import aiDrawShot from '../assets/shots/ai-draw.png'
+import aiPaletteShot from '../assets/shots/ai-palette.png'
 
 // 实测数据（主仓库 README「实测数据」）
 const stats = [
   ['70', 'ms', '再开一个文件'],
   ['1.8', 's', '打开 10 MB 文档'],
-  ['6.4', 'MB', '安装包']
+  ['6.7', 'MB', '安装包']
 ]
 
 const more = [
   ['打开文件夹', '整个仓库，即开即搜。'],
+  ['AI 助手连接', 'Claude Code 能直接改开着的文档。'],
+  ['使用指南', '每个功能怎么用，配截图。'],
   ['数学公式', 'KaTeX 排版。'],
+  ['字数统计', '只数读者看得到的字。'],
   ['导出', 'PDF、HTML，一键。'],
   ['主题', '一份 CSS，一套主题。'],
   ['自动更新', '新版本，点一下。'],
@@ -38,7 +46,7 @@ const more = [
 const dl = downloadsFor(latest.version, latest.date)
 const video = (name: keyof typeof VIDEO_VERSION) => url(`/video/${name}`) + '?v=' + VIDEO_VERSION[name]
 const description =
-  'Marlin（墨鳞）是 Windows 上免费的 Markdown 阅读器与编辑器：双击秒开，所见即所改；流程图、时序图、思维导图在画板里画，Git 同步，F5 放映。'
+  'Marlin（墨鳞）是 Windows 上免费的 Markdown 阅读器与编辑器：双击秒开，所见即所改；AI 润色、画图先预览再生效；流程图、时序图、思维导图在画板里画，Git 同步，文档历史，F5 放映。'
 const jsonld = [
   {
     '@context': 'https://schema.org',
@@ -55,10 +63,10 @@ const jsonld = [
     processorRequirements: 'x64',
     inLanguage: 'zh-CN',
     isAccessibleForFree: true,
-    featureList: ['双击秒开', '实时预览编辑', '流程图、时序图、思维导图画板', 'Git 同步', 'F5 放映', '数学公式', '导出 PDF、HTML', '全目录搜索'],
+    featureList: ['双击秒开', '实时预览编辑', '格式工具条', 'AI 写作（润色、翻译、续写、画图、摘要）', '流程图、时序图、思维导图画板', 'Git 同步', '文档历史', 'F5 放映', '数学公式', '导出 PDF、HTML', '全目录搜索'],
     softwareVersion: latest.version,
     datePublished: latest.date,
-    fileSize: '6.4 MB',
+    fileSize: '6.7 MB',
     downloadUrl: dl.setup.url,
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY' },
     author: { '@type': 'Organization', name: 'Marlin', url: absUrl('/'), sameAs: [REPO_URL] }
@@ -129,10 +137,20 @@ const jsonld = [
     <section class="band" id="edit">
       <div class="wrap">
         <h2>所见即所改</h2>
-        <p class="sub">在排好版的正文里直接写。</p>
+        <p class="sub">在排好版的正文里直接写，每次保存都留一版。</p>
         <figure class="shot">
           <Image src={liveShot} widths={[800, 1200, 1600, 2400]} sizes="(max-width: 1264px) calc(100vw - 64px), 1200px" alt="Marlin 实时预览：公式已排好版，表格点进一格变成可编辑的网格" loading="lazy" />
         </figure>
+        <div class="pair">
+          <figure class="shot">
+            <Image src={formatShot} widths={[600, 900, 1200]} sizes="(max-width: 760px) calc(100vw - 32px), 584px" alt="Marlin 实时预览：选中文字后上方浮出格式工具条，刚点了加粗" loading="lazy" />
+            <figcaption>格式工具条：选中文字，点一下加粗、加链接</figcaption>
+          </figure>
+          <figure class="shot">
+            <Image src={historyShot} widths={[600, 900, 1200]} sizes="(max-width: 760px) calc(100vw - 32px), 584px" alt="Marlin 文档历史：左边是每次保存，右边和现在的内容并排对比" loading="lazy" />
+            <figcaption>文档历史：和现在并排对比，一键还原</figcaption>
+          </figure>
+        </div>
       </div>
     </section>
 
@@ -156,7 +174,28 @@ const jsonld = [
       </div>
     </section>
 
-    <section class="band" id="git">
+    <section class="band" id="ai">
+      <div class="wrap">
+        <h2>AI 写作</h2>
+        <p class="sub">润色、翻译、续写、画图，先预览再生效。</p>
+        <figure class="shot">
+          <Image src={aiShot} widths={[800, 1200, 1600, 2400]} sizes="(max-width: 1264px) calc(100vw - 64px), 1200px" alt="Marlin AI 润色：改动逐处标在正文里，下方的条上可以接受、拒绝或全部接受" loading="lazy" />
+        </figure>
+        <div class="pair">
+          <figure class="shot">
+            <Image src={aiPaletteShot} widths={[600, 900, 1200]} sizes="(max-width: 760px) calc(100vw - 32px), 584px" alt="Marlin AI 命令面板：润色、翻译、续写、画图、摘要等命令" loading="lazy" />
+            <figcaption>命令面板：Ctrl+J，或格式工具条上的「✦ AI」</figcaption>
+          </figure>
+          <figure class="shot">
+            <Image src={aiDrawShot} widths={[600, 900, 1200]} sizes="(max-width: 760px) calc(100vw - 32px), 584px" alt="Marlin 用一句话画图：AI 画好的流程图，看过再插入" loading="lazy" />
+            <figcaption>一句话画图：写成 Mermaid，看过再插入</figcaption>
+          </figure>
+        </div>
+        <p class="note">模型自己选：DeepSeek、通义千问等接口，本机的 Ollama、LM Studio，或这台电脑上的 Claude Code 订阅。默认不开，可以设成只用本机模型。</p>
+      </div>
+    </section>
+
+    <section class="band alt" id="git">
       <div class="wrap">
         <h2>Git 同步</h2>
         <p class="sub">改动一目了然，提交、拉取、推送一键完成。</p>
@@ -399,6 +438,12 @@ const jsonld = [
   }
   .pair .shot {
     margin-top: 32px;
+  }
+  .note {
+    max-width: 720px;
+    margin: 48px auto 0;
+    color: var(--fg-muted);
+    line-height: 1.8;
   }
   .pair figcaption {
     margin-top: 16px;

@@ -25,7 +25,7 @@ pnpm check                    # 类型检查
 | 实测数字、功能文案 | 主仓库 README 与 `docs/CHANGELOG.md`，手工同步 | 改 `src/pages/index.astro`；口号在 `src/lib/brand.ts` |
 | 常见问题（同时生成 FAQPage 结构化数据） | 手写，事实以主仓库为准 | 改 `src/lib/faq.ts` |
 | 分享卡片 `public/og.png` | 用网站样式排版后截图（1200×630） | 文案或截图大改时重新截 |
-| 功能导览视频 `public/video/marlin-tour-*` | `promo-video/marlin-tour.mp4`（4 分 12 秒，12 章，无声；在 promo-video 里 `pnpm render:tour` 导出） | `pnpm video`：转出 1080p / 720p 与封面（第 15.5 秒的目录页）。导览时间轴变了要同步改 `src/lib/tour.ts` |
+| 功能导览视频 `public/video/marlin-tour-*` | `promo-video/marlin-tour.mp4`（4 分 54 秒，14 章，无声；在 promo-video 里 `pnpm render:tour` 导出） | `pnpm video`：转出 1080p / 720p 与封面（第 15.5 秒的目录页）。导览时间轴变了要同步改 `src/lib/tour.ts` |
 
 ## 目录
 
