@@ -34,11 +34,12 @@ Marlin 带了 6 套主题：
 
 <a class="shot" href="../images/settings-appearance.webp" target="_blank"><img src="../images/settings-appearance.webp" alt="设置 → 外观" loading="lazy" decoding="async"></a>
 
-1. 主题：点一下就换，带框的是现在用的
-2. 跟随系统明暗：Windows 切换浅色 / 深色模式时，Marlin 跟着换。打开后可以分别选「明亮时」「暗色时」用哪套主题
-3. 代码高亮：代码块的配色，默认跟随主题；也可以单独选 GitHub、One Dark、Solarized Light
-4. 打开主题目录：自己写的主题放这里，见下文
-5. 排版：在主题的基础上调整
+1. 界面语言：简体中文或 English；「跟随系统」时 Windows 的显示语言是中文就用中文，否则用英文。改了马上生效，打开的文档、没保存的修改和撤销记录都不受影响
+2. 主题：点一下就换，带框的是现在用的
+3. 跟随系统明暗：Windows 切换浅色 / 深色模式时，Marlin 跟着换。打开后可以分别选「明亮时」「暗色时」用哪套主题
+4. 代码高亮：代码块的配色，默认跟随主题；也可以单独选 GitHub、One Dark、Solarized Light
+5. 打开主题目录：自己写的主题放这里，见下文
+6. 排版：在主题的基础上调整
 
 | 排版 | 范围 | 说明 |
 |---|---|---|
@@ -48,6 +49,9 @@ Marlin 带了 6 套主题：
 | 正文字体 | 字体名 | 比如 `Noto Serif SC, serif`；留空用主题的字体。字体要先装在电脑上 |
 
 临时放大缩小用 <kbd>Ctrl +</kbd> / <kbd>Ctrl -</kbd>，见 [阅读](../04-reading/#放大缩小)。
+
+> <strong class="alert-title" data-kind="note">注意</strong>
+> 界面换成英文时，提示框的默认标题（「注意」「提示」）在预览和导出里也换成英文（Note、Tip）；AI 内置命令的提示词也用英文发，但润色、续写这类命令仍按原文的语言回答。文档内容、文件名不会变。使用指南暂时只有中文。
 
 ## 自己写一套主题
 

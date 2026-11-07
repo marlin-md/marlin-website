@@ -10,6 +10,7 @@
 
 | 项 | 默认 | 说明 |
 |---|---|---|
+| 界面语言 | 跟随系统 | 简体中文 / English；跟随系统时按 Windows 的显示语言，中文用中文，其他用英文 |
 | 主题 | 跟随系统 | 6 套内置主题加自己写的，见 [外观与主题](../23-themes/) |
 | 跟随系统明暗 | 开，明亮时 Marlin Light、暗色时 Marlin Dark | Windows 切换浅色 / 深色时跟着换 |
 | 代码高亮 | 跟随主题 | 也可以选 GitHub、One Dark、Solarized Light |
