@@ -9,7 +9,7 @@
 
 ## 安装版和便携版
 
-下载页（[marlin-md.cn/download](https://marlin-md.cn/download)）有两种：
+下载页（[marlin.mawork.cn/download](https://marlin.mawork.cn/download)）有两种：
 
 | | 安装版 `Marlin_x.y.z_x64-setup.exe` | 便携版 `Marlin_x.y.z_x64-portable.zip` |
 |---|---|---|

@@ -72,4 +72,4 @@ Marlin 里自带一份：☰ →「帮助」→「Markdown 语法速查」（或
 | 1.1 | 2026-09-24 | <kbd>/</kbd> 插入菜单 |
 | 1.0 | 2026-09-24 | 正式版：阅读、编辑、Mermaid、公式、导出 |
 
-每一版的详细改动见官网的 [更新日志](https://marlin-md.cn/changelog)。
+每一版的详细改动见官网的 [更新日志](https://marlin.mawork.cn/changelog)。

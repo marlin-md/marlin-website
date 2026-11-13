@@ -1,4 +1,4 @@
-// robots.txt 只在域名根目录生效（https://marlin-md.cn/robots.txt）
+// robots.txt 只在域名根目录生效（https://marlin.mawork.cn/robots.txt）
 import type { APIRoute } from 'astro'
 import { absUrl } from '../lib/url'
 
