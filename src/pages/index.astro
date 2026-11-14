@@ -51,8 +51,10 @@ const more = [
 
 const dl = downloadsFor(latest.version, latest.date)
 const video = (name: keyof typeof VIDEO_VERSION) => url(`/video/${name}`) + '?v=' + VIDEO_VERSION[name]
+const title = 'Marlin 墨鳞：免费的 Windows Markdown 编辑器 | Mermaid 画板、AI 改稿、Git 同步'
+const h1 = 'Marlin 墨鳞 · Windows Markdown 编辑器'
 const description =
-  'Marlin（墨鳞）是 Windows 上免费的 Markdown 阅读器与编辑器：双击秒开，所见即所改；AI 润色、画图先预览再生效；流程图、时序图、思维导图在画板里画，Git 同步，文档历史，F5 放映。'
+  'Marlin（墨鳞）是一款免费的 Windows Markdown 编辑器，不需要账号，不上传文档。Mermaid 流程图、时序图、思维导图可在画板上拖拽编辑；按 Ctrl+J 让 AI 改稿，每处改动都能逐条接受或拒绝；内置 Git，改动行标记和提交、拉取、推送一键完成。'
 const jsonld = [
   {
     '@context': 'https://schema.org',
@@ -81,6 +83,7 @@ const jsonld = [
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Marlin 墨鳞',
+    description,
     url: absUrl('/'),
     inLanguage: 'zh-CN'
   },
@@ -96,19 +99,11 @@ const jsonld = [
 ]
 ---
 
-<Base fullTitle={`Marlin 墨鳞 - ${SLOGAN}`} description={description} jsonld={jsonld}>
+<Base fullTitle={title} description={description} jsonld={jsonld}>
   <section class="band hero">
     <div class="wrap">
-      <!-- 名字先以 Markdown 源码出现，再「渲染」成标题：Marlin 实时预览做的就是这件事 -->
-      <h1 class="name" id="headline"><span class="mk" aria-hidden="true">#&nbsp;</span>Marlin<i class="caret" aria-hidden="true"></i></h1>
-      <script is:inline>
-        ;(() => {
-          const h = document.getElementById('headline')
-          if (!h || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-          h.classList.add('is-source')
-          setTimeout(() => h.classList.remove('is-source'), 1100)
-        })()
-      </script>
+      <!-- 首页 h1 用定稿全文；字号比原先单字 logo 小，避免一行撑破首屏 -->
+      <h1 class="name" id="headline">{h1}</h1>
       <p class="slogan">{SLOGAN}</p>
       <p class="slogan-en" lang="en">{SLOGAN_EN}</p>
       <DownloadLinks client:idle version={latest.version} date={latest.date} />
@@ -333,46 +328,12 @@ const jsonld = [
     background: linear-gradient(var(--bg) 66%, var(--bg-alt) 66%);
   }
   .name {
-    font-size: clamp(56px, 8.5vw, 112px);
-    line-height: 1;
-    letter-spacing: -0.05em;
+    max-width: 16em;
+    font-size: clamp(28px, 4.2vw, 52px);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
     font-weight: 700;
-    transition: font-weight 0.35s ease, letter-spacing 0.35s ease;
-  }
-  .name .mk {
-    display: inline-block;
-    max-width: 0;
-    overflow: hidden;
-    vertical-align: bottom;
-    opacity: 0;
-    font: 400 0.7em var(--font-mono);
-    color: var(--fg-muted);
-    transition: max-width 0.35s ease, opacity 0.25s ease;
-  }
-  .name .caret {
-    display: inline-block;
-    width: 0.04em;
-    height: 0.8em;
-    margin-left: 0.04em;
-    vertical-align: -0.04em;
-    background: var(--accent);
-    opacity: 0;
-  }
-  .name.is-source {
-    font-weight: 400;
-    letter-spacing: -0.02em;
-  }
-  .name.is-source .mk {
-    max-width: 1.6em;
-    opacity: 1;
-  }
-  .name.is-source .caret {
-    animation: blink 0.9s steps(1) infinite;
-  }
-  @keyframes blink {
-    50% {
-      opacity: 1;
-    }
+    text-wrap: balance;
   }
   .slogan {
     margin: 16px 0 0;
