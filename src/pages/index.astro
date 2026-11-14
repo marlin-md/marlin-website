@@ -101,8 +101,8 @@ const jsonld = [
 <Base fullTitle={title} description={description} jsonld={jsonld}>
   <section class="band hero">
     <div class="wrap">
-      <!-- 名字先以 Markdown 源码出现，再「渲染」成标题：Marlin 实时预览做的就是这件事。装饰性 logo，在 h1 之外。 -->
-      <div class="name" id="headline" aria-hidden="true"><span class="mk" aria-hidden="true">#&nbsp;</span>Marlin<i class="caret" aria-hidden="true"></i></div>
+      <!-- 名字先以 Markdown 源码出现，再「渲染」成标题：Marlin 实时预览做的就是这件事 -->
+      <h1 class="name" id="headline"><span class="mk" aria-hidden="true">#&nbsp;</span>Marlin<i class="caret" aria-hidden="true"></i></h1>
       <script is:inline>
         ;(() => {
           const h = document.getElementById('headline')
@@ -111,7 +111,6 @@ const jsonld = [
           setTimeout(() => h.classList.remove('is-source'), 1100)
         })()
       </script>
-      <h1 class="hero-title">Marlin 墨鳞<span class="hero-title-rest"> · Windows Markdown 编辑器</span></h1>
       <p class="slogan">{SLOGAN}</p>
       <p class="slogan-en" lang="en">{SLOGAN_EN}</p>
       <DownloadLinks client:idle version={latest.version} date={latest.date} />
@@ -376,20 +375,6 @@ const jsonld = [
     50% {
       opacity: 1;
     }
-  }
-  .hero-title {
-    margin-top: 16px;
-    max-width: 18em;
-    font-size: clamp(28px, 3.6vw, 44px);
-    line-height: 1.2;
-    letter-spacing: -0.03em;
-    font-weight: 700;
-    text-wrap: balance;
-  }
-  .hero-title-rest {
-    font-size: 0.75em;
-    font-weight: 600;
-    letter-spacing: -0.02em;
   }
   .slogan {
     margin: 16px 0 0;
