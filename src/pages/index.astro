@@ -7,6 +7,7 @@ import { latest } from '../lib/latest'
 import { faqs } from '../lib/faq'
 import { TOUR_CHAPTERS, TOUR_DURATION } from '../lib/tour'
 import { downloadsFor, REPO_URL } from '../lib/release'
+import { getReleaseMeta } from '../lib/release-meta'
 import { absUrl, url } from '../lib/url'
 import { SLOGAN, SLOGAN_EN } from '../lib/brand'
 import { VIDEO_VERSION } from '../lib/video'
@@ -25,11 +26,16 @@ import aiDrawShot from '../assets/shots/ai-draw.png'
 import aiPaletteShot from '../assets/shots/ai-palette.png'
 
 // 实测数据（主仓库 README「实测数据」）
-const stats = [
+const release = await getReleaseMeta()
+const fileSize = release?.fileSize
+const stats: [string, string, string][] = [
   ['70', 'ms', '再开一个文件'],
-  ['1.8', 's', '打开 10 MB 文档'],
-  ['7.1', 'MB', '安装包']
+  ['1.8', 's', '打开 10 MB 文档']
 ]
+if (fileSize) {
+  const [n, u] = fileSize.split(' ')
+  stats.push([n, u, '安装包'])
+}
 
 const more = [
   ['打开文件夹', '整个仓库，即开即搜。'],
@@ -66,7 +72,7 @@ const jsonld = [
     featureList: ['双击秒开', '实时预览编辑', '格式工具条', 'AI 写作（润色、翻译、续写、画图、摘要）', '流程图、时序图、思维导图画板', 'Git 同步', '文档历史', 'F5 放映', '数学公式', '导出 PDF、HTML', '全目录搜索'],
     softwareVersion: latest.version,
     datePublished: latest.date,
-    fileSize: '7.1 MB',
+    ...(fileSize ? { fileSize } : {}),
     downloadUrl: dl.setup.url,
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY' },
     author: { '@type': 'Organization', name: 'Marlin', url: absUrl('/'), sameAs: [REPO_URL] }
