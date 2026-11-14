@@ -1,4 +1,4 @@
-# 推到 main 就构建并发布到 GitHub Pages（境外线路的 https://marlin-md.cn；国内线路在阿里云服务器上，见 README）
+# 推到 main 就构建并发布：境外线路 GitHub Pages，国内线路阿里云 https://marlin.mawork.cn（见 README）
 name: Deploy
 
 on:
@@ -24,6 +24,8 @@ jobs:
         with:
           node-version: 22
           package-manager: pnpm@10.34.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
     needs: build

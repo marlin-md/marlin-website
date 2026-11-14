@@ -3,7 +3,13 @@ import type { APIRoute } from 'astro'
 import { faqs } from '../lib/faq'
 import { latest } from '../lib/latest'
 import { RELEASES_URL } from '../lib/release'
+import { getReleaseMeta } from '../lib/release-meta'
 import { absUrl } from '../lib/url'
+
+const release = await getReleaseMeta()
+const installerLine = release?.fileSize
+  ? `- 安装包：${release.fileSize}；另有免安装的便携版`
+  : `- 另有免安装的便携版`
 
 const text = `# Marlin 墨鳞
 
@@ -12,7 +18,7 @@ const text = `# Marlin 墨鳞
 - 最新版本：${latest.version}（${latest.date}）
 - 系统：Windows 10 1809 及以上、Windows 11，x64
 - 价格：免费，不需要注册账号；文档只在本机，不上传（只有用户自己配置 AI 模型并发起 AI 操作时，才把选定的内容发给所选模型）
-- 安装包：6.4 MB；另有免安装的便携版
+${installerLine}
 - 技术：Tauri 2 + Rust，使用系统自带的 WebView2，不打包浏览器内核
 
 ## 功能

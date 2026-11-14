@@ -82,6 +82,7 @@ export function fetchDownloadCount(): Promise<number | null> {
   return downloadCount
 }
 
+/** 十进制 MB，保留一位小数。7,119,827 字节 → "7.1 MB"。没有字节数时返回空字符串。 */
 export function formatSize(bytes?: number): string {
-  return bytes ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : ''
+  return bytes ? `${(bytes / 1_000_000).toFixed(1)} MB` : ''
 }

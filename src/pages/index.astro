@@ -7,6 +7,7 @@ import { latest } from '../lib/latest'
 import { faqs } from '../lib/faq'
 import { TOUR_CHAPTERS, TOUR_DURATION } from '../lib/tour'
 import { downloadsFor, REPO_URL } from '../lib/release'
+import { getReleaseMeta } from '../lib/release-meta'
 import { absUrl, url } from '../lib/url'
 import { SLOGAN, SLOGAN_EN } from '../lib/brand'
 import { VIDEO_VERSION } from '../lib/video'
@@ -25,11 +26,16 @@ import aiDrawShot from '../assets/shots/ai-draw.png'
 import aiPaletteShot from '../assets/shots/ai-palette.png'
 
 // 实测数据（主仓库 README「实测数据」）
-const stats = [
+const release = await getReleaseMeta()
+const fileSize = release?.fileSize
+const stats: [string, string, string][] = [
   ['70', 'ms', '再开一个文件'],
-  ['1.8', 's', '打开 10 MB 文档'],
-  ['7.1', 'MB', '安装包']
+  ['1.8', 's', '打开 10 MB 文档']
 ]
+if (fileSize) {
+  const [n, u] = fileSize.split(' ')
+  stats.push([n, u, '安装包'])
+}
 
 const more = [
   ['打开文件夹', '整个仓库，即开即搜。'],
@@ -45,8 +51,9 @@ const more = [
 
 const dl = downloadsFor(latest.version, latest.date)
 const video = (name: keyof typeof VIDEO_VERSION) => url(`/video/${name}`) + '?v=' + VIDEO_VERSION[name]
+const title = 'Marlin 墨鳞：免费的 Windows Markdown 编辑器 | Mermaid 画板、AI 改稿、Git 同步'
 const description =
-  'Marlin（墨鳞）是 Windows 上免费的 Markdown 阅读器与编辑器：双击秒开，所见即所改；AI 润色、画图先预览再生效；流程图、时序图、思维导图在画板里画，Git 同步，文档历史，F5 放映。'
+  'Marlin（墨鳞）是一款免费的 Windows Markdown 编辑器，不需要账号，不上传文档。Mermaid 流程图、时序图、思维导图可在画板上拖拽编辑；按 Ctrl+J 让 AI 改稿，每处改动都能逐条接受或拒绝；内置 Git，改动行标记和提交、拉取、推送一键完成。'
 const jsonld = [
   {
     '@context': 'https://schema.org',
@@ -66,7 +73,7 @@ const jsonld = [
     featureList: ['双击秒开', '实时预览编辑', '格式工具条', 'AI 写作（润色、翻译、续写、画图、摘要）', '流程图、时序图、思维导图画板', 'Git 同步', '文档历史', 'F5 放映', '数学公式', '导出 PDF、HTML', '全目录搜索'],
     softwareVersion: latest.version,
     datePublished: latest.date,
-    fileSize: '7.1 MB',
+    ...(fileSize ? { fileSize } : {}),
     downloadUrl: dl.setup.url,
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY' },
     author: { '@type': 'Organization', name: 'Marlin', url: absUrl('/'), sameAs: [REPO_URL] }
@@ -75,6 +82,7 @@ const jsonld = [
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Marlin 墨鳞',
+    description,
     url: absUrl('/'),
     inLanguage: 'zh-CN'
   },
@@ -90,7 +98,7 @@ const jsonld = [
 ]
 ---
 
-<Base fullTitle={`Marlin 墨鳞 - ${SLOGAN}`} description={description} jsonld={jsonld}>
+<Base fullTitle={title} description={description} jsonld={jsonld}>
   <section class="band hero">
     <div class="wrap">
       <!-- 名字先以 Markdown 源码出现，再「渲染」成标题：Marlin 实时预览做的就是这件事 -->
