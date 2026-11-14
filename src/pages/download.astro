@@ -3,7 +3,11 @@ import Base from '../layouts/Base.astro'
 import DownloadLinks from '../components/DownloadLinks.vue'
 import { latest } from '../lib/latest'
 import { RELEASES_URL } from '../lib/release'
+import { getReleaseMeta } from '../lib/release-meta'
 import { url } from '../lib/url'
+
+const release = await getReleaseMeta()
+const fileSize = release?.fileSize
 ---
 
 <Base title="下载" description={`下载 Marlin ${latest.version}：Windows 10 / 11 x64 安装版与便携版。`}>
@@ -11,7 +15,7 @@ import { url } from '../lib/url'
     <h1>下载 Marlin</h1>
     <p class="lede">v{latest.version}，{latest.date} 发布。{latest.summary} <a href={url('/changelog')}>更新日志</a></p>
 
-    <DownloadLinks client:load variant="page" version={latest.version} date={latest.date} />
+    <DownloadLinks client:load variant="page" version={latest.version} date={latest.date} fileSize={fileSize} />
 
     <div class="notes">
       <section>

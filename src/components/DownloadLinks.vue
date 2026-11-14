@@ -2,7 +2,7 @@
 // 下载入口：先用构建时的版本拼链接，页面打开后再问 GitHub 有没有更新的正式版。
 // 点了下载就在原地给出「接下来」的安装步骤；不是 Windows 的访客先告诉他目前只有 Windows 版。
 // data-event 留给以后接入的统计脚本（Umami / Plausible 都认这种写法）。
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { downloadsFor, fetchDownloadCount, fetchLatest, formatSize } from '../lib/release'
 import { url } from '../lib/url'
 
@@ -11,6 +11,8 @@ const props = defineProps<{
   date?: string
   /** hero：主按钮加便携版；page：安装版与便携版并列 */
   variant?: 'hero' | 'page'
+  /** 构建时传入的安装包大小，例如 "7.1 MB"；没有则不显示大小 */
+  fileSize?: string
 }>()
 
 const dl = ref(downloadsFor(props.version, props.date))
@@ -19,6 +21,8 @@ const notWindows = ref(false)
 // 累计下载到这个数才显示，数字太小显示出来反而减分
 const SHOW_DOWNLOADS_FROM = 500
 const downloads = ref<number | null>(null)
+// 优先用客户端取到的字节数格式化；否则用构建时传入的 fileSize；都没有就不显示大小
+const sizeLabel = computed(() => formatSize(dl.value.setup.size) || props.fileSize || '')
 
 onMounted(async () => {
   notWindows.value = !/Windows/i.test(navigator.userAgent)
@@ -43,7 +47,7 @@ onMounted(async () => {
       </a>
     </div>
     <p v-if="variant !== 'page' && !started" class="meta">
-      免费　v{{ dl.version }}　{{ formatSize(dl.setup.size) || '6.4 MB' }}　Windows 10 / 11<template v-if="downloads && downloads >= SHOW_DOWNLOADS_FROM">　已下载 {{ downloads.toLocaleString('zh-CN') }} 次</template>
+      免费　v{{ dl.version }}<template v-if="sizeLabel">　{{ sizeLabel }}</template>　Windows 10 / 11<template v-if="downloads && downloads >= SHOW_DOWNLOADS_FROM">　已下载 {{ downloads.toLocaleString('zh-CN') }} 次</template>
       <a class="more-link" :href="url('/download')">更多下载选项</a>
     </p>
 
@@ -52,7 +56,7 @@ onMounted(async () => {
         <h2>安装版</h2>
         <p>装到当前用户目录，不需要管理员权限。会注册 <code>.md</code> 文件关联，资源管理器里右键文件夹有「用 Marlin 打开」。</p>
         <a class="btn btn-primary" :href="dl.setup.url" data-event="download-setup" @click="started = 'setup'">下载安装版</a>
-        <p class="file">{{ dl.setup.name }}<span v-if="dl.setup.size">，{{ formatSize(dl.setup.size) }}</span></p>
+        <p class="file">{{ dl.setup.name }}<span v-if="sizeLabel">，{{ sizeLabel }}</span></p>
       </section>
       <section class="opt">
         <h2>便携版</h2>
