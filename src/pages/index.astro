@@ -113,7 +113,7 @@ const jsonld = [
       </script>
       <p class="slogan">{SLOGAN}</p>
       <p class="slogan-en" lang="en">{SLOGAN_EN}</p>
-      <DownloadLinks client:idle version={latest.version} date={latest.date} />
+      <DownloadLinks client:idle version={latest.version} date={latest.date} fileSize={fileSize} />
       <figure class="shot">
         <Image
           src={readingShot}
@@ -270,7 +270,7 @@ const jsonld = [
     <div class="wrap">
       <img src={url('/brand/mark.png')} alt="" width="64" height="54" />
       <h2>免费下载</h2>
-      <DownloadLinks client:idle version={latest.version} date={latest.date} />
+      <DownloadLinks client:idle version={latest.version} date={latest.date} fileSize={fileSize} />
     </div>
   </section>
 </Base>
