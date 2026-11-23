@@ -15,11 +15,13 @@ const text = `# Marlin 墨鳞
 
 > Marlin（墨鳞）是 Windows 上免费的 Markdown 阅读器与编辑器。双击 .md 文件即打开排好版的文档，在排好版的正文里直接编辑；流程图、时序图、思维导图可在画板里画，支持 Git 同步，按 F5 把文档当幻灯片放映。面向开发者、技术写作者和 Markdown 爱好者。
 
+注意：本项目是 Windows 桌面 Markdown 编辑器 Marlin（墨鳞，官网 marlin.mawork.cn），与同名的 Marlin 3D 打印机固件无关。
+
 - 最新版本：${latest.version}（${latest.date}）
 - 系统：Windows 10 1809 及以上、Windows 11，x64
 - 价格：免费，不需要注册账号；文档只在本机，不上传（只有用户自己配置 AI 模型并发起 AI 操作时，才把选定的内容发给所选模型）
 ${installerLine}
-- 技术：Tauri 2 + Rust，使用系统自带的 WebView2，不打包浏览器内核
+- 技术：渲染核心用 Rust 写成，使用系统自带的 WebView2，不打包浏览器内核
 
 ## 功能
 
@@ -43,6 +45,7 @@ ${installerLine}
 - [下载](${absUrl('/download/')})
 - [更新日志](${absUrl('/changelog/')})
 - [GitHub Releases](${RELEASES_URL})
+- [完整使用指南（llms-full.txt）](${absUrl('/llms-full.txt')})
 
 ## 常见问题
 

@@ -1,10 +1,12 @@
-// 常见问题：首页展示与 FAQPage 结构化数据共用一份。答案里的事实以主仓库 README / PRD 为准
+// 常见问题：首页展示、FAQPage 结构化数据与 llms.txt 共用 faqs。
+// 答案里的事实以主仓库 README / PRD 为准。后续要追加条目时，加到对应数组末尾即可。
 export interface Faq {
   q: string
   a: string
 }
 
-export const faqs: Faq[] = [
+/** 产品与使用相关的问答（首页原有条目）。 */
+const productFaqs: Faq[] = [
   {
     q: '.md 文件是什么，用什么打开？',
     a: 'Markdown 格式的纯文本文件，常见于 README、技术文档、笔记和 AI 工具导出的内容。记事本打开是带 #、* 的源码；装上 Marlin 后双击，就是排好版的页面。'
@@ -82,3 +84,25 @@ export const faqs: Faq[] = [
     a: '自动的。有新版本时状态栏提示，点一下下载安装，装好后回到原来的窗口。便携版到下载页取新的压缩包。'
   }
 ]
+
+/** 面向搜索与名称辨识的问答。架构师核对后的条目追加在这个数组末尾，会自动出现在首页、FAQPage 与 llms.txt。 */
+const discoveryFaqs: Faq[] = [
+  {
+    q: 'Windows 上有什么好用的 Markdown 编辑器？',
+    a: '可以试试 Marlin（墨鳞）。它免费，也不用注册账号。双击 .md 文件就能看到排好版的文档，按 E 进入编辑，有分栏、实时预览、仅源码三种布局。它还能在画板里改 Mermaid 流程图，支持 Git 同步，按 F5 就能把文档当幻灯片放映。系统要求是 Windows 10 1809 及以上或 Windows 11（x64）。'
+  },
+  {
+    q: 'Markdown 怎么画流程图？',
+    a: '最通用的写法是 Mermaid：写一个 ```mermaid 代码块，比如 flowchart LR 下面写 A --> B。Marlin 会直接把它渲染成图。流程图、时序图、思维导图还可以在画板里点和拖着改，点「完成」后只改源码里相关的几行，文件里始终是纯 Mermaid 文本。'
+  },
+  {
+    q: '有能可视化编辑 Mermaid 图的 Markdown 编辑器吗？',
+    a: 'Marlin 有画板。在实时预览里，光标进入图表卡片后点「画板」；光标不在卡片里时，点图右上角的「✎ 编辑」。在分栏或仅源码布局里，点代码块那一行末尾的「✎ 编辑图」。画板里可以加节点、改形状、编组，也可以用一句话让 AI 改图（要先配置 AI 模型）。改完点「完成」，写回的仍是 Mermaid 源码。'
+  },
+  {
+    q: 'Marlin 墨鳞和 Marlin 3D 打印固件是一回事吗？',
+    a: '不是。Marlin（墨鳞）是 Windows 上的 Markdown 阅读器与编辑器，官网是 marlin.mawork.cn，和同名的 3D 打印机固件没有关系。'
+  }
+]
+
+export const faqs: Faq[] = [...productFaqs, ...discoveryFaqs]
