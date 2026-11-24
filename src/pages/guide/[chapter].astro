@@ -2,7 +2,10 @@
 // 使用指南的一章：src/content/guide/<chapter>.md，网址 /guide/<chapter>/
 import type { MarkdownInstance } from 'astro'
 import Guide from '../../layouts/Guide.astro'
+import faqRaw from '../../content/guide/26-faq.md?raw'
+import { parseGuideFaqs, faqPageJsonLd } from '../../lib/guide-faq'
 import { chapters } from '../../lib/guide'
+import { absUrl } from '../../lib/url'
 
 export function getStaticPaths() {
   const pages = import.meta.glob<MarkdownInstance<Record<string, unknown>>>('../../content/guide/*.md', { eager: true })
@@ -16,9 +19,43 @@ const { chapter } = Astro.params
 const { page } = Astro.props as { page: MarkdownInstance<Record<string, unknown>> }
 const title = page.getHeadings().find((h) => h.depth === 1)?.text ?? chapter
 const blurb = chapters.find((c) => c.slug === chapter)?.blurb
+const description = blurb ? `Marlin 使用指南 · ${title}：${blurb}` : `Marlin 使用指南 · ${title}`
+const pageUrl = absUrl(`/guide/${chapter}/`)
+
+const jsonld: object[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: title,
+    url: pageUrl,
+    description,
+    inLanguage: 'zh-CN',
+    about: {
+      '@type': 'SoftwareApplication',
+      name: 'Marlin',
+      alternateName: '墨鳞',
+      url: absUrl('/')
+    },
+    isPartOf: {
+      '@type': 'WebPage',
+      name: '使用指南',
+      url: absUrl('/guide/')
+    }
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '首页', item: absUrl('/') },
+      { '@type': 'ListItem', position: 2, name: '使用指南', item: absUrl('/guide/') },
+      { '@type': 'ListItem', position: 3, name: title, item: pageUrl }
+    ]
+  }
+]
+if (chapter === '26-faq') jsonld.push(faqPageJsonLd(parseGuideFaqs(faqRaw)))
 const { Content } = page
 ---
 
-<Guide title={title} slug={chapter} description={blurb ? `Marlin 使用指南 · ${title}：${blurb}` : `Marlin 使用指南 · ${title}`}>
+<Guide title={title} slug={chapter} description={description} jsonld={jsonld}>
   <Content />
 </Guide>

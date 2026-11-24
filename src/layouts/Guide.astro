@@ -9,8 +9,10 @@ interface Props {
   description?: string
   /** 这一页的文件名（不带 .md）；首页是 '' */
   slug: string
+  /** 结构化数据（JSON-LD），传给 Base */
+  jsonld?: object[]
 }
-const { title, description, slug } = Astro.props
+const { title, description, slug, jsonld = [] } = Astro.props
 const href = (s: string) => url(s ? `/guide/${s}/` : '/guide/')
 const at = chapters.findIndex((c) => c.slug === slug)
 const prev = at > 0 ? chapters[at - 1] : null
@@ -18,7 +20,7 @@ const prev = at > 0 ? chapters[at - 1] : null
 const next = at >= 0 ? (chapters[at + 1] ?? null) : slug ? null : chapters[0]
 ---
 
-<Base title={slug ? `${title} - 使用指南` : '使用指南'} description={description}>
+<Base title={slug ? `${title} - 使用指南` : '使用指南'} description={description} jsonld={jsonld}>
   <div class="wrap guide">
     <aside>
       <a class="home" href={href('')} aria-current={slug ? undefined : 'page'}>使用指南</a>
